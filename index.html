@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#4f46e5">
 <title>MonStock Pro</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MonStock">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -767,7 +771,6 @@ const t = k => {
   return (dict[lang] && dict[lang][k]) || k;
 };
 
-/* ==================== DARK MODE ==================== */
 function toggleDarkMode() {
   isDark = !isDark;
   localStorage.setItem('dark', isDark ? '1' : '0');
@@ -780,7 +783,6 @@ function applyDarkMode() {
   if (btn) btn.textContent = isDark ? '☀️' : '🌙';
 }
 
-/* ==================== NOTIFICATIONS ==================== */
 async function enableNotifications() {
   if (!('Notification' in window)) { showToast('الإشعارات غير مدعومة', 'error'); return; }
   try {
@@ -808,7 +810,6 @@ function checkLowStockNotify() {
   } catch (e) {}
 }
 
-/* ==================== FIREBASE ==================== */
 window.addEventListener('fb-ready', () => { fbReady = true; startAuthListener(); });
 window.addEventListener('fb-error', () => { fbReady = false; });
 
@@ -899,7 +900,6 @@ function setCloudStatus(status) {
 window.addEventListener('online', () => { if (currentUser && !isSeller) cloudSave(); });
 window.addEventListener('offline', () => setCloudStatus('offline'));
 
-/* ==================== LOCAL STORAGE ==================== */
 function saveLocal() {
   try {
     localStorage.setItem('monstock_products', JSON.stringify(products));
@@ -920,7 +920,6 @@ function loadLocal() {
 }
 function save() { saveLocal(); scheduleSync(); }
 
-/* ==================== AUTH ==================== */
 function showAuthScreen() {
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('app').style.display = 'none';
@@ -1038,7 +1037,6 @@ async function forceSync() {
   showToast(t('syncedNow'), 'success');
 }
 
-/* ==================== SELLER MODE ==================== */
 function switchToSeller() {
   document.getElementById('ownerCard').style.display = 'none';
   document.getElementById('sellerBox').style.display = 'block';
@@ -1047,7 +1045,6 @@ function switchToSeller() {
   document.getElementById('sellerError').classList.remove('show');
   setTimeout(() => document.getElementById('sellerPin').focus(), 200);
 }
-
 function switchToOwner() {
   document.getElementById('ownerCard').style.display = 'block';
   document.getElementById('sellerBox').style.display = 'none';
@@ -1056,19 +1053,16 @@ function switchToOwner() {
   document.getElementById('registerBox').style.display = 'none';
   document.getElementById('sellerError').classList.remove('show');
 }
-
 function showSellerError(msg) {
   const el = document.getElementById('sellerError');
   el.textContent = msg;
   el.classList.add('show');
 }
-
 async function doSellerLogin() {
   document.getElementById('sellerError').classList.remove('show');
   const pin = document.getElementById('sellerPin').value.trim();
   if (!pin) return showSellerError('أدخل الرقم السري');
   if (pin.length < 4) return showSellerError('الرقم السري 4 أرقام على الأقل');
-
   let correctPin = localStorage.getItem('monstock_seller_pin') || '';
   if (!correctPin && window.FB && fbReady) {
     try {
@@ -1082,32 +1076,26 @@ async function doSellerLogin() {
   }
   if (!correctPin) return showSellerError('لم يُضبط الرقم السري. اتصل بالمالك');
   if (pin !== correctPin) return showSellerError('الرقم السري غير صحيح');
-
   isSeller = true;
   localStorage.setItem('monstock_is_seller', '1');
   showSellerApp();
 }
-
 function showSellerApp() {
   isSeller = true;
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('app').style.display = 'flex';
   document.body.classList.add('seller-mode');
-
   const ue = document.getElementById('userEmail'); if (ue) ue.textContent = 'بائع';
   const ua = document.getElementById('userAv'); if (ua) ua.textContent = '👨‍💼';
   const ub = document.getElementById('userBadgeBtn'); if (ub) ub.onclick = null;
   const cs = document.getElementById('cloudStatus');
   if (cs) { cs.className = 'cloud-status'; cs.style.background = '#f59e0b'; cs.textContent = '👨‍💼 وضع البائع'; }
-
   const slb = document.getElementById('sellerLogoutBox'); if (slb) slb.style.display = 'block';
-
   loadLocal();
   applyLanguage();
   refreshAll();
   goTo('page-home');
 }
-
 function sellerLogout() {
   if (!confirm('تسجيل خروج البائع؟')) return;
   isSeller = false;
@@ -1115,7 +1103,6 @@ function sellerLogout() {
   document.body.classList.remove('seller-mode');
   location.reload();
 }
-
 async function saveSellerPin() {
   const pin = document.getElementById('sSellerPin').value.trim();
   if (!pin || pin.length < 4) return showToast('الرقم السري 4 أرقام على الأقل', 'error');
@@ -1133,14 +1120,12 @@ async function saveSellerPin() {
     showToast('تم حفظ الرقم السري محليًا ✅', 'success');
   }
 }
-
 function loadSellerPinToSettings() {
   const pin = localStorage.getItem('monstock_seller_pin') || '';
   const el = document.getElementById('sSellerPin');
   if (el) el.value = pin;
 }
 
-/* ==================== LANGUAGE ==================== */
 function applyLanguage() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -1163,7 +1148,6 @@ function refreshAll() {
   renderLabelsProductList(); renderLowStockBanner(); renderTodayStats();
 }
 
-/* ==================== RENDER ==================== */
 function renderLowStockBanner() {
   const div = document.getElementById('lowStockBanner'); if (!div) return;
   const low = products.filter(p => p.quantity <= p.minQuantity);
@@ -1271,7 +1255,6 @@ function renderExpenses() {
   `).join('');
 }
 
-/* ==================== REPORTS ==================== */
 function getDefaultRange() {
   const today = new Date();
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -1294,10 +1277,8 @@ function generateReport() {
   const content = document.getElementById('reportContent'); if (!content) return;
   const c = lang === 'ar' ? 'دج' : 'DA';
   if (!from || !to) { content.innerHTML = ''; return; }
-
   const fromDate = new Date(from);
   const toDate = new Date(to); toDate.setHours(23, 59, 59);
-
   const periodInvoices = invoices.filter(inv => {
     const d = inv.dateOnly ? new Date(inv.dateOnly) : new Date(inv.id);
     return d >= fromDate && d <= toDate;
@@ -1307,12 +1288,10 @@ function generateReport() {
     const d = new Date(e.date);
     return d >= fromDate && d <= toDate;
   });
-
   const totalSales = periodInvoices.reduce((s, i) => s + Number(i.total || 0), 0);
   const totalExp = periodExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
   const totalProfit = totalSales - totalExp;
   const avg = periodInvoices.length > 0 ? totalSales / periodInvoices.length : 0;
-
   const dailySales = {};
   const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
   for (let i = 0; i < days && i < 60; i++) {
@@ -1324,7 +1303,6 @@ function generateReport() {
     const key = inv.dateOnly || new Date(inv.id).toISOString().split('T')[0];
     if (dailySales[key] !== undefined) dailySales[key] += Number(inv.total || 0);
   });
-
   const productSales = {};
   periodInvoices.forEach(inv => {
     (inv.items || []).forEach(item => {
@@ -1334,7 +1312,6 @@ function generateReport() {
     });
   });
   const top = Object.values(productSales).sort((a, b) => b.total - a.total).slice(0, 5);
-
   const maxDaily = Math.max(...Object.values(dailySales), 1);
   const chartBars = Object.entries(dailySales).map(([date, val]) => {
     const h = Math.max((val / maxDaily) * 130, 4);
@@ -1343,7 +1320,6 @@ function generateReport() {
       <div class="bar-label">${date.slice(5)}</div>
     </div>`;
   }).join('');
-
   const rankClass = ['gold', 'silver', 'bronze', '', ''];
   const topHtml = top.length > 0 ? top.map((p, i) => `
     <div class="top-product">
@@ -1352,7 +1328,6 @@ function generateReport() {
       <div class="tp-val">${p.total.toFixed(2)} ${c}</div>
     </div>
   `).join('') : `<div class="empty-state" style="padding:20px;"><p style="font-size:13px;">${t('noData')}</p></div>`;
-
   content.innerHTML = `
     <div class="date-pill">📅 ${from} → ${to}</div>
     <div class="card">
@@ -1375,7 +1350,6 @@ function generateReport() {
   `;
 }
 
-/* ==================== SELECTS ==================== */
 function updateProductSelects() {
   const opts = products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
   const ph = `<option value="">-- اختر --</option>`;
@@ -1397,7 +1371,6 @@ function updateInvoiceProductSelect() {
   sel.innerHTML = `<option value="">-- اختر --</option>` + products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
 }
 
-/* ==================== PRODUCT CRUD ==================== */
 function openAddModal() {
   document.getElementById('modalTitle').textContent = 'إضافة منتج';
   document.getElementById('editId').value = '';
@@ -1493,7 +1466,6 @@ function doStockOut() {
   checkLowStockNotify();
 }
 
-/* ==================== EXPENSES ==================== */
 function openExpenseModal() {
   document.getElementById('eDesc').value = '';
   document.getElementById('eAmount').value = '';
@@ -1521,7 +1493,6 @@ function deleteExpense(id) {
   showToast('تم الحذف 🗑️', 'success');
 }
 
-/* ==================== INVOICES ==================== */
 function addInvoiceItem() {
   const id = Number(document.getElementById('invProductSelect').value);
   if (!id) return showToast('اختر منتجًا', 'error');
@@ -1699,7 +1670,6 @@ function deleteInvoice(id) {
   showToast('تم الحذف 🗑️', 'success');
 }
 
-/* ==================== COMPANY ==================== */
 function saveCompany() {
   company.name = document.getElementById('sCompany').value.trim();
   company.phone = document.getElementById('sPhone').value.trim();
@@ -1712,7 +1682,6 @@ function loadCompany() {
   const a = document.getElementById('sAddress'); if (a) a.value = company.address || '';
 }
 
-/* ==================== BARCODE ==================== */
 function generateBarcode() {
   const pid = document.getElementById('bcProduct').value;
   const fmt = document.getElementById('bcFormat').value;
@@ -1808,7 +1777,6 @@ function handleQuickScanResult(code) {
   else { showToast('لا يوجد منتج', 'error'); }
 }
 
-/* ==================== LABELS ==================== */
 function renderLabelsProductList() {
   const div = document.getElementById('labelsProductList'); if (!div) return;
   const c = lang === 'ar' ? 'دج' : 'DA';
@@ -1885,7 +1853,6 @@ function printLabels() {
   setTimeout(() => window.print(), 300);
 }
 
-/* ==================== EXPORT/IMPORT ==================== */
 function exportData() {
   const data = { version: '7.0', exportDate: new Date().toISOString(), products, movements, expenses, invoices, company };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1921,7 +1888,6 @@ function clearAll() {
   save(); refreshAll(); showToast('تم المسح 🗑️', 'success');
 }
 
-/* ==================== UTILS ==================== */
 function showToast(msg, type = '') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -1946,7 +1912,6 @@ function goTo(pageId) {
   if (pageId === 'page-reports') generateReport();
 }
 
-/* ==================== EVENTS ==================== */
 document.getElementById('searchInput').addEventListener('input', renderProducts);
 document.getElementById('langBtn').addEventListener('click', changeLang);
 document.querySelectorAll('.modal-overlay').forEach(ov => {
@@ -1965,7 +1930,6 @@ document.getElementById('loginPass').addEventListener('keypress', e => { if (e.k
 document.getElementById('registerPass2').addEventListener('keypress', e => { if (e.key === 'Enter') doRegister(); });
 document.getElementById('sellerPin').addEventListener('keypress', e => { if (e.key === 'Enter') doSellerLogin(); });
 
-/* ==================== INIT ==================== */
 loadLocal();
 applyDarkMode();
 applyLanguage();
@@ -1989,5 +1953,16 @@ setTimeout(() => {
   }
 }, 5000);
 </script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .catch(err => console.log('❌ Service Worker error:', err));
+  });
+}
+</script>
+
 </body>
 </html>
