@@ -19,7 +19,7 @@ body.dark{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--text2:#cbd5e1;--text3:#64
 html,body{margin:0;padding:0;height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text);direction:rtl;transition:background .3s,color .3s}
 body.ltr{direction:ltr}
-#app{position:fixed;inset:0;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:var(--bg);box-shadow:0 0 40px rgba(0,0,0,.1)}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;width:100%;background:var(--bg)}
 .header{background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;padding:18px;padding-top:max(18px,env(safe-area-inset-top));border-radius:0 0 24px 24px;flex-shrink:0;transition:background .3s}
 .header-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .brand{display:flex;align-items:center;gap:10px}
@@ -189,15 +189,24 @@ body.ltr .alert-banner{border-left:none;border-right:4px solid var(--warn)}
 .chart{display:flex;align-items:flex-end;gap:4px;height:150px;padding:10px;background:var(--input);border-radius:12px;overflow-x:auto}
 .chart-bar{flex:1;min-width:20px;background:linear-gradient(180deg,var(--p),var(--pd));border-radius:6px 6px 0 0;position:relative;transition:.3s;cursor:pointer}
 .chart-bar:hover{opacity:.8}
+.chart-bar.profit{background:linear-gradient(180deg,var(--ok),#059669)}
 .chart-bar .bar-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--text3);white-space:nowrap;font-weight:600}
 .chart-bar .bar-value{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--p);font-weight:700;white-space:nowrap}
+.chart-bar.profit .bar-value{color:var(--ok)}
 .chart-container{padding-bottom:28px;position:relative}
+.chart-legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:12px;color:var(--text2);flex-wrap:wrap}
+.chart-legend span{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:3px;display:inline-block}
+.legend-dot.sales{background:linear-gradient(135deg,#4f46e5,#4338ca)}
+.legend-dot.profit{background:linear-gradient(135deg,#10b981,#059669)}
 .report-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
 .report-row:last-child{border-bottom:none}
 .report-row .rl{color:var(--text2)}
 .report-row .rv{font-weight:700;color:var(--text)}
 .report-row.total{border-top:2px solid var(--p);border-bottom:none;margin-top:6px;padding-top:12px;font-size:16px}
 .report-row.total .rv{color:var(--p);font-size:18px}
+.report-row.profit .rv{color:var(--ok)}
+.report-row.loss .rv{color:var(--err)}
 .top-product{display:flex;align-items:center;gap:10px;padding:10px;background:var(--input);border-radius:10px;margin-bottom:8px}
 .top-product .rank{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pd));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
 .top-product .rank.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
@@ -211,46 +220,124 @@ body.ltr .alert-banner{border-left:none;border-right:4px solid var(--warn)}
 .seller-entry{text-align:center;margin-top:18px;padding-top:16px;border-top:1px solid #e5e7eb}
 .seller-entry button{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 12px rgba(245,158,11,.3)}
 .seller-entry button:active{transform:scale(.98)}
-#printInvoice,#printLabels{display:none}
-@media print{
-  body *{visibility:hidden!important}
-  #printInvoice,#printInvoice *{visibility:visible!important}
-  #printLabels,#printLabels *{visibility:visible!important}
-  #printInvoice{display:block!important;position:absolute;top:0;left:0;width:100%;background:#fff}
-  #printLabels{display:block!important;position:absolute;top:0;left:0;width:100%;background:#fff}
-  .inv-a4{font-family:Arial,sans-serif;color:#000}
-  .inv-a4 .inv-header{display:flex;justify-content:space-between;border-bottom:3px solid #4f46e5;padding-bottom:12px;margin-bottom:20px}
-  .inv-a4 .inv-header .company h1{margin:0;color:#4f46e5;font-size:24px}
-  .inv-a4 .inv-header .company p{margin:2px 0;font-size:12px;color:#555}
-  .inv-a4 .inv-header .meta{text-align:left}
-  .inv-a4 .inv-header .meta h2{margin:0 0 6px;font-size:20px;color:#4f46e5}
-  .inv-a4 .inv-header .meta p{margin:2px 0;font-size:12px}
-  .inv-a4 .inv-client{background:#f3f4f6;padding:10px;border-radius:6px;margin-bottom:16px;font-size:13px}
-  .inv-a4 .inv-table{width:100%;border-collapse:collapse;margin-bottom:16px}
-  .inv-a4 .inv-table th{background:#4f46e5;color:#fff;padding:8px;font-size:12px;text-align:center}
-  .inv-a4 .inv-table td{padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;text-align:center}
-  .inv-a4 .inv-totals{margin-top:12px}
-  .inv-a4 .inv-totals .row{display:flex;justify-content:flex-end;gap:20px;padding:4px 0;font-size:13px}
-  .inv-a4 .inv-totals .row.total{font-size:18px;font-weight:700;color:#4f46e5;border-top:2px solid #4f46e5;padding-top:8px;margin-top:8px}
-  .inv-a4 .inv-footer{margin-top:30px;text-align:center;font-size:11px;color:#777;border-top:1px solid #e5e7eb;padding-top:12px}
-  .inv-a4 .inv-thanks{text-align:center;font-size:14px;font-weight:700;color:#4f46e5;margin-top:20px}
-  .print-label-sheet{display:grid;gap:2mm}
-  .print-label{border:1px dashed #999;padding:1.5mm;text-align:center;font-family:Arial,sans-serif;color:#000;background:#fff;overflow:hidden;box-sizing:border-box;page-break-inside:avoid}
-  .print-label .pl-store{font-size:6pt;color:#555;margin-bottom:.5mm;overflow:hidden;white-space:nowrap}
-  .print-label .pl-name{font-weight:700;font-size:8pt;margin-bottom:.5mm;overflow:hidden;white-space:nowrap}
-  .print-label .pl-code svg{max-width:100%;height:auto}
-  .print-label .pl-price{font-weight:700;font-size:10pt;margin-top:.5mm}
+.seller-mode-banner{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:12px 16px;border-radius:14px;text-align:center;font-size:13px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 20px rgba(245,158,11,.35)}
+
+/* ============ MODERN SELLING PAGE ============ */
+.sell-hero{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:26px 24px;border-radius:24px;margin-bottom:20px;text-align:center;box-shadow:0 12px 40px rgba(102,126,234,.35);position:relative;overflow:hidden}
+.sell-hero::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%);animation:rotateHero 20s linear infinite}
+@keyframes rotateHero{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.sell-hero .label{font-size:12px;opacity:.9;letter-spacing:2px;position:relative;margin-bottom:8px;font-weight:600}
+.sell-hero .big-total{font-size:52px;font-weight:900;letter-spacing:-2px;position:relative;line-height:1;text-shadow:0 4px 20px rgba(0,0,0,.15);transition:.3s}
+.sell-hero .currency{font-size:20px;opacity:.85;font-weight:600;margin-right:6px;position:relative}
+.sell-hero .sub-info{display:flex;justify-content:center;gap:12px;margin-top:14px;font-size:12px;position:relative;flex-wrap:wrap}
+.sell-hero .sub-info span{background:rgba(255,255,255,.18);padding:5px 12px;border-radius:20px;backdrop-filter:blur(10px);font-weight:600}
+
+.sell-search-row{display:flex;gap:8px;margin-bottom:14px}
+.sell-search-row input{flex:1;padding:14px 16px;border:none;border-radius:14px;background:var(--card);font-size:14px;box-shadow:var(--shs);font-family:inherit;color:var(--text)}
+.sell-search-row input:focus{outline:2px solid var(--p)}
+.sell-search-row button{padding:0 18px;border:none;border-radius:14px;background:linear-gradient(135deg,#06b6d4,#0891b2);color:#fff;cursor:pointer;font-size:18px;box-shadow:var(--shs)}
+
+.sell-product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px;max-height:340px;overflow-y:auto;padding:2px}
+.sell-prod-card{background:var(--card);padding:14px 10px;border-radius:14px;box-shadow:var(--shs);cursor:pointer;transition:.2s;text-align:center;border:2px solid transparent}
+.sell-prod-card:active{transform:scale(.95);border-color:var(--p)}
+.sell-prod-card .p-emoji{font-size:30px;margin-bottom:6px}
+.sell-prod-card .p-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sell-prod-card .p-price{font-size:15px;font-weight:800;color:var(--p)}
+.sell-prod-card .p-stock{font-size:10px;color:var(--text3);margin-top:2px}
+.sell-prod-card.low-stock{opacity:.5;cursor:not-allowed}
+
+.cart-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--input);border-radius:14px;margin-bottom:10px;animation:slideIn .3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.cart-item .ci-info{flex:1;min-width:0}
+.cart-item .ci-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-item .ci-price{font-size:11px;color:var(--text3)}
+.cart-item .ci-qty{display:flex;align-items:center;gap:4px;background:var(--card);border-radius:10px;padding:3px}
+.cart-item .ci-qty button{width:28px;height:28px;border-radius:8px;border:none;background:var(--p);color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.cart-item .ci-qty button:active{transform:scale(.9)}
+.cart-item .ci-qty button.minus{background:var(--err)}
+.cart-item .ci-qty .num{min-width:28px;text-align:center;font-weight:800;font-size:14px;color:var(--text)}
+.cart-item .ci-total{font-size:14px;font-weight:800;color:var(--p);min-width:65px;text-align:left}
+body.ltr .cart-item .ci-total{text-align:right}
+.cart-item .ci-del{background:none;border:none;color:var(--err);font-size:18px;cursor:pointer;padding:2px}
+
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.pay-btn{padding:14px 8px;border-radius:14px;border:none;font-family:inherit;font-weight:700;font-size:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:.2s;color:#fff}
+.pay-btn:active{transform:scale(.95)}
+.pay-btn .pay-icon{font-size:22px}
+.pay-btn.a4{background:linear-gradient(135deg,#4f46e5,#4338ca);box-shadow:0 4px 14px rgba(79,70,229,.35)}
+.pay-btn.t58{background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 4px 14px rgba(245,158,11,.35)}
+.pay-btn.t80{background:linear-gradient(135deg,#06b6d4,#0891b2);box-shadow:0 4px 14px rgba(6,182,212,.35)}
+
+.extras-toggle{display:flex;justify-content:center;margin:8px 0;color:var(--p);font-size:12px;font-weight:600;cursor:pointer;user-select:none}
+.extras-toggle:hover{text-decoration:underline}
+.extras-section{display:none;padding-top:8px}
+.extras-section.show{display:block;animation:fadeIn .3s}
+
+.client-input-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.client-input-row input{padding:11px 12px;border:2px solid var(--border);border-radius:12px;font-size:13px;background:var(--input);font-family:inherit;color:var(--text)}
+
+/* ============ DESKTOP LAYOUT ============ */
+@media (min-width: 900px) {
+  #app { flex-direction: row; max-width: 100%; }
+  .bottom-nav { position: fixed; top: 0; right: 0; bottom: 0; left: auto; width: 240px; flex-direction: column; justify-content: flex-start; gap: 4px; padding: 20px 12px; border-radius: 0; background: var(--card); box-shadow: -2px 0 20px rgba(0,0,0,.06); z-index: 60; overflow-y: auto; }
+  body.ltr .bottom-nav { right: auto; left: 0; box-shadow: 2px 0 20px rgba(0,0,0,.06); }
+  .bottom-nav::before { content: '📦 MonStock Pro'; display: block; font-size: 18px; font-weight: 800; color: var(--p); padding: 12px 16px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; letter-spacing: 0.5px; }
+  .nav-item { flex: 0 0 auto; flex-direction: row; justify-content: flex-start; gap: 14px; padding: 14px 18px; font-size: 15px; border-radius: 12px; color: var(--text2); font-weight: 600; transition: all .2s; text-align: right; }
+  body.ltr .nav-item { text-align: left; }
+  .nav-item:hover { background: var(--input); color: var(--text); }
+  .nav-item.active { background: linear-gradient(135deg, var(--p), var(--pd)); color: #fff; box-shadow: 0 4px 14px rgba(79,70,229,.3); }
+  .nav-item .nav-icon { font-size: 22px; }
+  .header { position: fixed; top: 0; right: 240px; left: 0; border-radius: 0; z-index: 55; box-shadow: 0 2px 12px rgba(0,0,0,.06); padding: 16px 32px; }
+  body.ltr .header { right: 0; left: 240px; }
+  .brand h1 { font-size: 20px; }
+  .brand .logo { width: 46px; height: 46px; font-size: 24px; }
+  .content { margin-right: 240px; margin-top: 100px; padding: 32px 40px; padding-bottom: 40px; width: calc(100% - 240px); }
+  body.ltr .content { margin-right: 0; margin-left: 240px; }
+  .grid-icons { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .icon-card { padding: 28px 20px; border-radius: 20px; }
+  .icon-card .circle { width: 70px; height: 70px; font-size: 32px; border-radius: 20px; }
+  .icon-card .label { font-size: 15px; font-weight: 700; }
+  .stats-mini { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .stat-mini { padding: 22px; border-radius: 18px; }
+  .stat-mini .label { font-size: 13px; }
+  .stat-mini .value { font-size: 24px; }
+  .card { padding: 24px; border-radius: 20px; margin-bottom: 20px; }
+  .welcome-card { padding: 32px; border-radius: 24px; }
+  .welcome-card h2 { font-size: 24px; }
+  .modal { max-width: 700px; }
+  .sell-hero { padding: 40px 32px; }
+  .sell-hero .big-total { font-size: 72px; }
+  .sell-hero .label { font-size: 14px; }
+  .sell-hero .currency { font-size: 26px; }
+  .sell-product-grid { grid-template-columns: repeat(4, 1fr); max-height: 420px; gap: 12px; }
+  .sell-prod-card { padding: 20px 14px; }
+  .sell-prod-card .p-emoji { font-size: 40px; }
+  .sell-prod-card .p-name { font-size: 15px; }
+  .sell-prod-card .p-price { font-size: 18px; }
+  .pay-btn { padding: 20px 14px; font-size: 14px; }
+  .pay-btn .pay-icon { font-size: 28px; }
 }
-@media (min-width:481px){#app{border-radius:24px;margin:20px auto;height:calc(100vh - 40px);position:relative}}
+@media (min-width: 1400px) {
+  .bottom-nav { width: 260px; }
+  .header { right: 260px; }
+  body.ltr .header { left: 260px; }
+  .content { margin-right: 260px; padding: 36px 60px; width: calc(100% - 260px); }
+  body.ltr .content { margin-left: 260px; }
+  .sell-product-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
 body.seller-mode .owner-only{display:none!important}
 body.seller-mode .owner-badge{display:none!important}
 body.seller-mode .nav-item[data-page="page-reports"],
+body.seller-mode .nav-item[data-page="page-expenses"],
+body.seller-mode .nav-item[data-page="page-stats"],
 body.seller-mode .nav-item[data-page="page-settings"]{display:none!important}
 body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
 </style>
 </head>
 <body>
 
+<!-- ============ AUTH SCREEN ============ -->
 <div class="auth-screen" id="authScreen">
   <div class="auth-logo">📦</div>
   <h1 class="auth-title">MonStock Pro</h1>
@@ -279,7 +366,6 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
         <div class="auth-switch"><span id="lblHave">لديك حساب؟</span> <a onclick="switchToLogin()" id="lblLogin">سجّل الدخول</a></div>
       </div>
     </div>
-
     <div id="sellerBox" style="display:none;">
       <h2 style="margin:0 0 4px;font-size:20px;text-align:center;">👨‍💼 دخول البائع</h2>
       <p class="sub" style="text-align:center;color:#9ca3af;font-size:12px;margin:0 0 18px;">أدخل الرقم السري للدخول</p>
@@ -293,7 +379,6 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
         <a onclick="switchToOwner()" style="color:#4f46e5;font-weight:700;cursor:pointer;text-decoration:none;font-size:13px;">← العودة لدخول المالك</a>
       </div>
     </div>
-
     <div class="seller-entry" id="sellerEntry">
       <button onclick="switchToSeller()">👨‍💼 دخول البائع</button>
     </div>
@@ -301,6 +386,7 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
   <div class="auth-info" id="authInfo">🔒 بياناتك محفوظة بأمان في السحابة<br>يمكنك استرجاعها من أي جهاز</div>
 </div>
 
+<!-- ============ SPLASH ============ -->
 <div class="splash hide" id="splash" style="display:none;">
   <div class="logo-big">📦</div>
   <h1>MonStock Pro</h1>
@@ -308,6 +394,7 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
   <div class="loader"></div>
 </div>
 
+<!-- ============ APP ============ -->
 <div id="app" style="display:none;">
   <div class="header">
     <div class="header-top">
@@ -335,158 +422,211 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
 
   <div class="content" id="content">
 
+    <!-- HOME -->
     <div class="page active" id="page-home">
+      <div id="sellerBanner" style="display:none;"></div>
       <div class="welcome-card">
         <h2 id="welcomeTitle">مرحبًا بك 👋</h2>
         <p id="welcomeSub">إدارة مخزونك بسهولة وسرعة</p>
       </div>
       <div id="lowStockBanner"></div>
-      <div class="section-title"><span>⚡</span><span>إجراءات سريعة</span></div>
+      <div class="section-title"><span>⚡</span><span data-tr="quickActions">إجراءات سريعة</span></div>
       <div class="grid-icons">
-        <button class="icon-card" onclick="goTo('page-products')"><div class="circle blue">📦</div><div class="label">المنتجات</div></button>
-        <button class="icon-card" onclick="openAddModal()"><div class="circle green">➕</div><div class="label">إضافة منتج</div></button>
-        <button class="icon-card" onclick="goTo('page-in')"><div class="circle cyan">📥</div><div class="label">إدخال</div></button>
-        <button class="icon-card" onclick="goTo('page-out')"><div class="circle orange">📤</div><div class="label">إخراج</div></button>
-        <button class="icon-card" onclick="goTo('page-invoice')"><div class="circle indigo">🧾</div><div class="label">الفواتير</div></button>
-        <button class="icon-card owner-only" onclick="goTo('page-reports')"><div class="circle teal">📈</div><div class="label">التقارير</div></button>
-        <button class="icon-card owner-only" onclick="goTo('page-expenses')"><div class="circle pink">💸</div><div class="label">المصروفات</div></button>
-        <button class="icon-card" onclick="goTo('page-barcode')"><div class="circle purple">🏷️</div><div class="label">الباركود</div></button>
+        <button class="icon-card" onclick="goTo('page-products')"><div class="circle blue">📦</div><div class="label" data-tr="products">المنتجات</div></button>
+        <button class="icon-card" onclick="openAddModal()"><div class="circle green">➕</div><div class="label" data-tr="addProduct">إضافة منتج</div></button>
+        <button class="icon-card" onclick="goTo('page-in')"><div class="circle cyan">📥</div><div class="label" data-tr="stockIn">إدخال</div></button>
+        <button class="icon-card" onclick="goTo('page-out')"><div class="circle orange">📤</div><div class="label" data-tr="stockOut">إخراج</div></button>
+        <button class="icon-card" onclick="goTo('page-invoice')"><div class="circle indigo">🧾</div><div class="label" data-tr="sellBtn">البيع</div></button>
+        <button class="icon-card owner-only" onclick="goTo('page-reports')"><div class="circle teal">📈</div><div class="label" data-tr="reportsBtn">التقارير</div></button>
+        <button class="icon-card owner-only" onclick="goTo('page-expenses')"><div class="circle pink">💸</div><div class="label" data-tr="expensesBtn">المصروفات</div></button>
+        <button class="icon-card" onclick="goTo('page-barcode')"><div class="circle purple">🏷️</div><div class="label" data-tr="barcodeBtn">الباركود</div></button>
       </div>
-      <div class="section-title"><span>📊</span><span>نظرة عامة</span></div>
+      <div class="section-title"><span>📊</span><span data-tr="overview">نظرة عامة</span></div>
       <div class="stats-mini">
-        <div class="stat-mini"><div class="label">عدد المنتجات</div><div class="value" id="miniProducts">0</div></div>
-        <div class="stat-mini green"><div class="label">إجمالي الكميات</div><div class="value" id="miniQty">0</div></div>
-        <div class="stat-mini orange"><div class="label">قيمة المخزون</div><div class="value" id="miniValue">0</div></div>
-        <div class="stat-mini red"><div class="label">منتجات ناقصة</div><div class="value" id="miniLow">0</div></div>
+        <div class="stat-mini"><div class="label" data-tr="totalProducts">عدد المنتجات</div><div class="value" id="miniProducts">0</div></div>
+        <div class="stat-mini green"><div class="label" data-tr="totalQty">إجمالي الكميات</div><div class="value" id="miniQty">0</div></div>
+        <div class="stat-mini orange"><div class="label" data-tr="stockValue">قيمة المخزون</div><div class="value" id="miniValue">0</div></div>
+        <div class="stat-mini red"><div class="label" data-tr="lowStock">منتجات ناقصة</div><div class="value" id="miniLow">0</div></div>
       </div>
       <div class="owner-only">
-        <div class="section-title"><span>💰</span><span>اليوم</span></div>
+        <div class="section-title"><span>💰</span><span data-tr="today">اليوم</span></div>
         <div class="stats-mini">
-          <div class="stat-mini"><div class="label">مبيعات اليوم</div><div class="value" id="todaySales">0</div></div>
-          <div class="stat-mini green"><div class="label">فواتير اليوم</div><div class="value" id="todayInvoices">0</div></div>
+          <div class="stat-mini"><div class="label" data-tr="todaySales">مبيعات اليوم</div><div class="value" id="todaySales">0</div></div>
+          <div class="stat-mini green"><div class="label" data-tr="todayInvoices">فواتير اليوم</div><div class="value" id="todayInvoices">0</div></div>
+          <div class="stat-mini orange"><div class="label" data-tr="todayProfit">ربح اليوم</div><div class="value" id="todayProfit">0</div></div>
+          <div class="stat-mini purple"><div class="label" data-tr="todayAvg">متوسط الفاتورة</div><div class="value" id="todayAvg">0</div></div>
         </div>
       </div>
-      <div class="version-tag">MonStock Pro v7.0 © 2025</div>
+      <div class="version-tag">MonStock Pro v8.0 © 2025</div>
       <div style="text-align:center;margin-top:14px;display:none;" id="sellerLogoutBox">
         <button onclick="sellerLogout()" style="background:#fee2e2;color:#b91c1c;border:none;padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px;">🚪 خروج البائع</button>
       </div>
     </div>
 
+    <!-- PRODUCTS -->
     <div class="page" id="page-products">
       <div class="search-bar">
         <input type="text" id="searchInput" placeholder="🔍 بحث عن منتج...">
         <span class="search-icon">🔍</span>
       </div>
-      <button class="btn btn-info" onclick="quickScan()" style="margin-bottom:14px;">📷 مسح سريع</button>
+      <button class="btn btn-info" onclick="quickScan()" style="margin-bottom:14px;">📷 <span data-tr="quickScan">مسح سريع</span></button>
       <div id="productsList"></div>
     </div>
 
+    <!-- STOCK IN -->
     <div class="page" id="page-in">
-      <div class="section-title"><span>📥</span><span>إدخال مخزون</span></div>
+      <div class="section-title"><span>📥</span><span data-tr="stockInTitle">إدخال مخزون</span></div>
       <div class="card">
         <div class="form-group">
-          <label>اختر المنتج</label>
+          <label data-tr="selectProduct">اختر المنتج</label>
           <div style="display:flex;gap:8px;">
             <select class="form-control" id="inProduct" style="flex:1;"></select>
             <button class="btn btn-info" style="width:auto;padding:0 16px;" onclick="quickScan('in')">📷</button>
           </div>
         </div>
-        <div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="inQty" min="1" placeholder="0"></div>
-        <div class="form-group"><label>ملاحظة (اختياري)</label><input type="text" class="form-control" id="inNote"></div>
-        <button class="btn btn-success" onclick="doStockIn()">✅ تأكيد</button>
+        <div class="form-group"><label data-tr="quantity">الكمية</label><input type="number" class="form-control" id="inQty" min="1" placeholder="0"></div>
+        <div class="form-group"><label data-tr="noteOpt">ملاحظة (اختياري)</label><input type="text" class="form-control" id="inNote"></div>
+        <button class="btn btn-success" onclick="doStockIn()">✅ <span data-tr="confirm">تأكيد</span></button>
       </div>
     </div>
 
+    <!-- STOCK OUT -->
     <div class="page" id="page-out">
-      <div class="section-title"><span>📤</span><span>إخراج مخزون</span></div>
+      <div class="section-title"><span>📤</span><span data-tr="stockOutTitle">إخراج مخزون</span></div>
       <div class="card">
         <div class="form-group">
-          <label>اختر المنتج</label>
+          <label data-tr="selectProduct">اختر المنتج</label>
           <div style="display:flex;gap:8px;">
             <select class="form-control" id="outProduct" style="flex:1;"></select>
             <button class="btn btn-info" style="width:auto;padding:0 16px;" onclick="quickScan('out')">📷</button>
           </div>
         </div>
-        <div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="outQty" min="1" placeholder="0"></div>
-        <div class="form-group"><label>ملاحظة (اختياري)</label><input type="text" class="form-control" id="outNote"></div>
-        <button class="btn btn-warning" onclick="doStockOut()">✅ تأكيد</button>
+        <div class="form-group"><label data-tr="quantity">الكمية</label><input type="number" class="form-control" id="outQty" min="1" placeholder="0"></div>
+        <div class="form-group"><label data-tr="noteOpt">ملاحظة (اختياري)</label><input type="text" class="form-control" id="outNote"></div>
+        <button class="btn btn-warning" onclick="doStockOut()">✅ <span data-tr="confirm">تأكيد</span></button>
       </div>
     </div>
 
+    <!-- ============ MODERN SELLING PAGE ============ -->
     <div class="page" id="page-invoice">
-      <div class="section-title"><span>🧾</span><span>الفواتير</span></div>
-      <div class="card">
-        <h3 class="card-title">🆕 فاتورة جديدة</h3>
-        <div class="form-row">
-          <div class="form-group"><label>اسم العميل</label><input type="text" class="form-control" id="invClient"></div>
-          <div class="form-group"><label>هاتف العميل</label><input type="text" class="form-control" id="invPhone"></div>
+      
+      <!-- Big total hero card -->
+      <div class="sell-hero">
+        <div class="label" data-tr="totalToPay">المجموع الإجمالي</div>
+        <div class="big-total">
+          <span id="heroTotal">0.00</span>
+          <span class="currency" id="heroCurrency">دج</span>
         </div>
-        <div class="form-group">
-          <label>أضف منتجات</label>
-          <div style="display:flex;gap:8px;">
-            <select class="form-control" id="invProductSelect" style="flex:1;"></select>
-            <button class="btn btn-success" style="width:auto;padding:0 16px;" onclick="addInvoiceItem()">➕</button>
-          </div>
-        </div>
-        <div id="invoiceItems"></div>
-        <div class="form-row">
-          <div class="form-group"><label>الضريبة (%)</label><input type="number" class="form-control" id="invTax" value="0" min="0" oninput="renderInvoiceSummary()"></div>
-          <div class="form-group"><label>الخصم</label><input type="number" class="form-control" id="invDiscount" value="0" min="0" oninput="renderInvoiceSummary()"></div>
-        </div>
-        <div class="invoice-summary">
-          <div class="row"><span>المجموع الفرعي</span><span id="invSubtotal">0</span></div>
-          <div class="row"><span>الضريبة</span><span id="invTaxAmount">0</span></div>
-          <div class="row"><span>الخصم</span><span id="invDiscountAmount">0</span></div>
-          <div class="row total"><span>الإجمالي</span><span id="invTotal">0</span></div>
-        </div>
-        <div class="btn-group">
-          <button class="btn btn-primary" onclick="saveAndPrintInvoice('a4')">🖨️ A4</button>
-          <button class="btn btn-warning" onclick="saveAndPrintInvoice('thermal58')">🧾 58mm</button>
-          <button class="btn btn-info" onclick="saveAndPrintInvoice('thermal80')">🧾 80mm</button>
+        <div class="sub-info">
+          <span>🧾 <span id="heroItems">0</span> <span data-tr="items">عنصر</span></span>
+          <span>📦 <span id="heroQty">0</span> <span data-tr="pieces">قطعة</span></span>
         </div>
       </div>
-      <div class="section-title"><span>📋</span><span>سجل الفواتير</span></div>
+
+      <!-- Client inputs (collapsible) -->
+      <div class="extras-toggle" onclick="toggleExtras()">
+        <span id="extrasToggleText">➕ <span data-tr="addClientAndTax">إضافة عميل / ضريبة / خصم</span></span>
+      </div>
+      <div class="extras-section" id="extrasSection">
+        <div class="card" style="padding:14px;">
+          <div class="client-input-row" style="margin-bottom:10px;">
+            <input type="text" id="invClient" placeholder="👤 اسم العميل">
+            <input type="text" id="invPhone" placeholder="📞 الهاتف">
+          </div>
+          <div class="client-input-row">
+            <input type="number" id="invTax" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الضريبة %">
+            <input type="number" id="invDiscount" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الخصم">
+          </div>
+          <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+              <span data-tr="subtotal">المجموع الفرعي</span><span id="invSubtotal">0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+              <span data-tr="tax">الضريبة</span><span id="invTaxAmount">0</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+              <span data-tr="discount">الخصم</span><span id="invDiscountAmount">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick product search + scan -->
+      <div class="sell-search-row" style="margin-top:16px;">
+        <input type="text" id="sellSearch" placeholder="🔍 ابحث واضغط لإضافة" oninput="renderSellGrid()">
+        <button onclick="quickScan('invoice')" title="قراءة بالكاميرا">📷</button>
+      </div>
+
+      <!-- Product grid for quick add -->
+      <div class="sell-product-grid" id="sellProductGrid"></div>
+
+      <!-- Cart -->
+      <div class="section-title"><span>🛒</span><span data-tr="cart">السلة</span> <span style="background:var(--p);color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;" id="cartCount">0</span></div>
+      <div id="invoiceItems"></div>
+
+      <!-- Payment buttons -->
+      <div class="pay-grid">
+        <button class="pay-btn a4" onclick="saveAndPrintInvoice('a4')">
+          <span class="pay-icon">🖨️</span>
+          <span data-tr="printA4">A4</span>
+        </button>
+        <button class="pay-btn t58" onclick="saveAndPrintInvoice('thermal58')">
+          <span class="pay-icon">🧾</span>
+          <span data-tr="print58">58mm</span>
+        </button>
+        <button class="pay-btn t80" onclick="saveAndPrintInvoice('thermal80')">
+          <span class="pay-icon">🧾</span>
+          <span data-tr="print80">80mm</span>
+        </button>
+      </div>
+
+      <button class="btn btn-outline" onclick="resetInvoice()" style="margin-top:10px;">🔄 <span data-tr="newSale">بيع جديد</span></button>
+
+      <div class="section-title" style="margin-top:24px;"><span>📋</span><span data-tr="recentInvoices">آخر الفواتير</span></div>
       <div id="invoicesList"></div>
     </div>
 
+    <!-- REPORTS -->
     <div class="page" id="page-reports">
-      <div class="section-title"><span>📈</span><span>التقارير المفصلة</span></div>
+      <div class="section-title"><span>📈</span><span data-tr="reportsTitle">التقارير المفصلة</span></div>
       <div class="card">
-        <h3 class="card-title">📅 اختر الفترة</h3>
+        <h3 class="card-title">📅 <span data-tr="choosePeriod">اختر الفترة</span></h3>
         <div class="form-row">
-          <div class="form-group"><label>من</label><input type="date" class="form-control" id="reportFrom"></div>
-          <div class="form-group"><label>إلى</label><input type="date" class="form-control" id="reportTo"></div>
+          <div class="form-group"><label data-tr="from">من</label><input type="date" class="form-control" id="reportFrom"></div>
+          <div class="form-group"><label data-tr="to">إلى</label><input type="date" class="form-control" id="reportTo"></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
-          <button class="btn btn-outline" onclick="setRange('today')" style="padding:8px;font-size:12px;">اليوم</button>
-          <button class="btn btn-outline" onclick="setRange('week')" style="padding:8px;font-size:12px;">الأسبوع</button>
-          <button class="btn btn-outline" onclick="setRange('month')" style="padding:8px;font-size:12px;">الشهر</button>
-          <button class="btn btn-outline" onclick="setRange('year')" style="padding:8px;font-size:12px;">السنة</button>
+          <button class="btn btn-outline" onclick="setRange('today')" style="padding:8px;font-size:12px;" data-tr="todayBtn">اليوم</button>
+          <button class="btn btn-outline" onclick="setRange('week')" style="padding:8px;font-size:12px;" data-tr="weekBtn">الأسبوع</button>
+          <button class="btn btn-outline" onclick="setRange('month')" style="padding:8px;font-size:12px;" data-tr="monthBtn">الشهر</button>
+          <button class="btn btn-outline" onclick="setRange('year')" style="padding:8px;font-size:12px;" data-tr="yearBtn">السنة</button>
         </div>
-        <button class="btn btn-primary" onclick="generateReport()">📊 تطبيق</button>
+        <button class="btn btn-primary" onclick="generateReport()">📊 <span data-tr="apply">تطبيق</span></button>
       </div>
       <div id="reportContent"></div>
     </div>
 
+    <!-- EXPENSES -->
     <div class="page" id="page-expenses">
-      <div class="section-title"><span>💸</span><span>المصروفات</span></div>
+      <div class="section-title"><span>💸</span><span data-tr="expensesTitle">المصروفات</span></div>
       <div class="card" style="background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;">
-        <div style="font-size:12px;opacity:.9;">إجمالي المصروفات</div>
+        <div style="font-size:12px;opacity:.9;" data-tr="totalExpenses">إجمالي المصروفات</div>
         <div style="font-size:26px;font-weight:700;margin-top:6px;" id="expTotal">0</div>
       </div>
-      <button class="btn btn-primary" onclick="openExpenseModal()" style="margin-bottom:14px;">➕ إضافة مصروف</button>
-      <div class="section-title"><span>📋</span><span>قائمة المصروفات</span></div>
+      <button class="btn btn-primary" onclick="openExpenseModal()" style="margin-bottom:14px;">➕ <span data-tr="addExpense">إضافة مصروف</span></button>
+      <div class="section-title"><span>📋</span><span data-tr="expensesList">قائمة المصروفات</span></div>
       <div id="expensesList"></div>
     </div>
 
+    <!-- BARCODE -->
     <div class="page" id="page-barcode">
-      <div class="section-title"><span>🏷️</span><span>الباركود والملصقات</span></div>
+      <div class="section-title"><span>🏷️</span><span data-tr="barcodeTitle">الباركود والملصقات</span></div>
       <div class="card">
-        <h3 class="card-title">🏷️ توليد باركود منتج</h3>
-        <div class="form-group"><label>اختر المنتج</label><select class="form-control" id="bcProduct" onchange="generateBarcode()"></select></div>
+        <h3 class="card-title">🏷️ <span data-tr="genBarcode">توليد باركود منتج</span></h3>
+        <div class="form-group"><label data-tr="selectProduct">اختر المنتج</label><select class="form-control" id="bcProduct" onchange="generateBarcode()"></select></div>
         <div class="form-row">
-          <div class="form-group"><label>قيمة الباركود</label><input type="text" class="form-control" id="bcValue" placeholder="Auto"></div>
-          <div class="form-group"><label>النوع</label>
+          <div class="form-group"><label data-tr="barcodeValue">قيمة الباركود</label><input type="text" class="form-control" id="bcValue" placeholder="Auto"></div>
+          <div class="form-group"><label data-tr="barcodeFormat">النوع</label>
             <select class="form-control" id="bcFormat" onchange="generateBarcode()">
               <option value="CODE128">CODE128</option>
               <option value="EAN13">EAN13</option>
@@ -495,23 +635,23 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
             </select>
           </div>
         </div>
-        <button class="btn btn-outline" onclick="generateBarcode()">🔄 توليد</button>
+        <button class="btn btn-outline" onclick="generateBarcode()">🔄 <span data-tr="generate">توليد</span></button>
       </div>
-      <div class="barcode-preview" id="barcodePreview"><p style="color:var(--text3);padding:20px;">اختر المنتج</p></div>
+      <div class="barcode-preview" id="barcodePreview"><p style="color:var(--text3);padding:20px;" data-tr="selectProduct">اختر المنتج</p></div>
       <div class="card">
-        <h3 class="card-title">📷 قراءة الباركود</h3>
-        <button class="btn btn-info" id="scanBtn" onclick="startScanner()">📷 <span>بدء القراءة</span></button>
+        <h3 class="card-title">📷 <span data-tr="scanBarcode">قراءة الباركود</span></h3>
+        <button class="btn btn-info" id="scanBtn" onclick="startScanner()">📷 <span data-tr="startScan">بدء القراءة</span></button>
         <div id="scannerArea" style="display:none;margin-top:12px;"></div>
         <div id="scanResult" style="margin-top:12px;"></div>
       </div>
       <div class="card">
-        <h3 class="card-title">🖨️ طباعة ملصقات</h3>
+        <h3 class="card-title">🖨️ <span data-tr="printLabels">طباعة ملصقات</span></h3>
         <div class="form-group">
-          <label>اختر المنتجات والكميات</label>
+          <label data-tr="selectProductsQty">اختر المنتجات والكميات</label>
           <div id="labelsProductList" style="max-height:350px;overflow-y:auto;padding:2px;"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>الحجم</label>
+          <div class="form-group"><label data-tr="labelSize">الحجم</label>
             <select class="form-control" id="lblSize">
               <option value="30x20">30×20mm</option>
               <option value="40x25" selected>40×25mm</option>
@@ -519,7 +659,7 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
               <option value="70x40">70×40mm</option>
             </select>
           </div>
-          <div class="form-group"><label>نوع الباركود</label>
+          <div class="form-group"><label data-tr="barcodeType">نوع الباركود</label>
             <select class="form-control" id="lblBarcodeFormat">
               <option value="CODE128">CODE128</option>
               <option value="EAN13">EAN13</option>
@@ -527,162 +667,167 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
           </div>
         </div>
         <div class="form-group">
-          <label>عناصر الملصق</label>
+          <label data-tr="labelElements">عناصر الملصق</label>
           <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:13px;">
-            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowStore" checked> المتجر</label>
-            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowName" checked> الاسم</label>
-            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowPrice" checked> السعر</label>
+            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowStore" checked> <span data-tr="store">المتجر</span></label>
+            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowName" checked> <span data-tr="nameLbl">الاسم</span></label>
+            <label style="display:flex;align-items:center;gap:4px;font-weight:400;color:var(--text)"><input type="checkbox" id="lblShowPrice" checked> <span data-tr="priceLbl">السعر</span></label>
           </div>
         </div>
-        <button class="btn btn-purple" onclick="printLabels()">🖨️ طباعة كل الملصقات</button>
+        <button class="btn btn-purple" onclick="printLabels()">🖨️ <span data-tr="printAllLabels">طباعة كل الملصقات</span></button>
       </div>
     </div>
 
+    <!-- MOVEMENTS -->
     <div class="page" id="page-movements">
-      <div class="section-title"><span>📋</span><span>سجل الحركات</span></div>
+      <div class="section-title"><span>📋</span><span data-tr="movementsTitle">سجل الحركات</span></div>
       <div id="movementsList"></div>
     </div>
 
+    <!-- STATS -->
     <div class="page" id="page-stats">
-      <div class="section-title"><span>📊</span><span>الإحصائيات</span></div>
+      <div class="section-title"><span>📊</span><span data-tr="statsTitle">الإحصائيات</span></div>
       <div class="stats-mini">
-        <div class="stat-mini"><div class="label">عدد المنتجات</div><div class="value" id="statProducts2">0</div></div>
-        <div class="stat-mini green"><div class="label">إجمالي الكميات</div><div class="value" id="statQty2">0</div></div>
-        <div class="stat-mini orange"><div class="label">قيمة المخزون</div><div class="value" id="statValue2">0</div></div>
-        <div class="stat-mini red"><div class="label">منتجات ناقصة</div><div class="value" id="statLow2">0</div></div>
-        <div class="stat-mini purple"><div class="label">إجمالي المصروفات</div><div class="value" id="statExpenses2">0</div></div>
-        <div class="stat-mini purple"><div class="label">إجمالي المبيعات</div><div class="value" id="statSales2">0</div></div>
+        <div class="stat-mini"><div class="label" data-tr="totalProducts">عدد المنتجات</div><div class="value" id="statProducts2">0</div></div>
+        <div class="stat-mini green"><div class="label" data-tr="totalQty">إجمالي الكميات</div><div class="value" id="statQty2">0</div></div>
+        <div class="stat-mini orange"><div class="label" data-tr="stockValue">قيمة المخزون</div><div class="value" id="statValue2">0</div></div>
+        <div class="stat-mini red"><div class="label" data-tr="lowStock">منتجات ناقصة</div><div class="value" id="statLow2">0</div></div>
+        <div class="stat-mini purple"><div class="label" data-tr="totalExpenses">إجمالي المصروفات</div><div class="value" id="statExpenses2">0</div></div>
+        <div class="stat-mini purple"><div class="label" data-tr="totalSales">إجمالي المبيعات</div><div class="value" id="statSales2">0</div></div>
       </div>
       <div class="card">
-        <h3 class="card-title">⚠️ المنتجات الناقصة</h3>
+        <h3 class="card-title">⚠️ <span data-tr="lowStockList">المنتجات الناقصة</span></h3>
         <div id="lowStockList"></div>
       </div>
     </div>
 
+    <!-- SETTINGS -->
     <div class="page" id="page-settings">
-      <div class="section-title"><span>⚙️</span><span>الإعدادات</span></div>
+      <div class="section-title"><span>⚙️</span><span data-tr="settingsTitle">الإعدادات</span></div>
       <div class="card" style="background:linear-gradient(135deg,#4f46e5,#4338ca);color:#fff;">
         <div style="display:flex;align-items:center;gap:12px;">
           <div style="width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;" id="settingsAv">U</div>
           <div style="flex:1;min-width:0;">
             <div style="font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;" id="settingsEmail">user@mail.com</div>
-            <div style="font-size:11px;opacity:.85;margin-top:2px;">☁️ متزامن مع السحابة</div>
+            <div style="font-size:11px;opacity:.85;margin-top:2px;">☁️ <span data-tr="syncedCloud">متزامن مع السحابة</span></div>
           </div>
         </div>
       </div>
       <div class="card owner-only">
-        <h3 class="card-title">🏢 معلومات المتجر</h3>
-        <div class="form-group"><label>اسم المتجر</label><input type="text" class="form-control" id="sCompany"></div>
-        <div class="form-group"><label>الهاتف</label><input type="text" class="form-control" id="sPhone"></div>
-        <div class="form-group"><label>العنوان</label><input type="text" class="form-control" id="sAddress"></div>
-        <button class="btn btn-primary" onclick="saveCompany()">💾 حفظ</button>
+        <h3 class="card-title">🏢 <span data-tr="storeInfo">معلومات المتجر</span></h3>
+        <div class="form-group"><label data-tr="storeName">اسم المتجر</label><input type="text" class="form-control" id="sCompany"></div>
+        <div class="form-group"><label data-tr="phone">الهاتف</label><input type="text" class="form-control" id="sPhone"></div>
+        <div class="form-group"><label data-tr="address">العنوان</label><input type="text" class="form-control" id="sAddress"></div>
+        <button class="btn btn-primary" onclick="saveCompany()">💾 <span data-tr="saveBtn">حفظ</span></button>
       </div>
       <div class="card owner-only">
-        <h3 class="card-title">🔔 التنبيهات</h3>
+        <h3 class="card-title">🔔 <span data-tr="notifTitle">التنبيهات</span></h3>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-          <span style="font-size:14px;color:var(--text)">إشعارات المتصفح</span>
-          <button class="btn btn-outline" onclick="enableNotifications()" id="notifBtn" style="width:auto;padding:8px 14px;font-size:12px;">تفعيل</button>
+          <span style="font-size:14px;color:var(--text)" data-tr="browserNotif">إشعارات المتصفح</span>
+          <button class="btn btn-outline" onclick="enableNotifications()" id="notifBtn" style="width:auto;padding:8px 14px;font-size:12px;" data-tr="enable">تفعيل</button>
         </div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6;">ستصلك إشعارات عند نقص المخزون</div>
+        <div style="font-size:11px;color:var(--text3);line-height:1.6;" data-tr="notifHint">ستصلك إشعارات عند نقص المخزون</div>
       </div>
       <div class="card owner-only">
-        <h3 class="card-title">🔐 إعدادات البائع</h3>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6;">
-          الرقم السري الذي يستخدمه البائع للدخول إلى التطبيق.
-        </div>
+        <h3 class="card-title">🔐 <span data-tr="sellerSettings">إعدادات البائع</span></h3>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6;" data-tr="sellerHint">الرقم السري الذي يستخدمه البائع للدخول إلى التطبيق.</div>
         <div class="form-group">
-          <label>الرقم السري للبائع</label>
+          <label data-tr="sellerPin">الرقم السري للبائع</label>
           <input type="tel" class="form-control" id="sSellerPin" placeholder="مثال: 1234" inputmode="numeric" maxlength="8" style="text-align:center;font-size:18px;letter-spacing:6px;">
         </div>
-        <button class="btn btn-primary" onclick="saveSellerPin()">💾 حفظ الرقم السري</button>
+        <button class="btn btn-primary" onclick="saveSellerPin()">💾 <span data-tr="savePin">حفظ الرقم السري</span></button>
       </div>
       <button class="setting-item owner-only" onclick="forceSync()">
-        <div class="left"><div class="s-icon circle green">☁️</div><span>مزامنة الآن</span></div>
+        <div class="left"><div class="s-icon circle green">☁️</div><span data-tr="syncNow">مزامنة الآن</span></div>
         <span class="arrow">‹</span>
       </button>
       <button class="setting-item owner-only" onclick="exportData()">
-        <div class="left"><div class="s-icon circle cyan">💾</div><span>تصدير نسخة احتياطية</span></div>
+        <div class="left"><div class="s-icon circle cyan">💾</div><span data-tr="exportBackup">تصدير نسخة احتياطية</span></div>
         <span class="arrow">‹</span>
       </button>
       <button class="setting-item owner-only" onclick="document.getElementById('importFile').click()">
-        <div class="left"><div class="s-icon circle purple">📂</div><span>استيراد نسخة</span></div>
+        <div class="left"><div class="s-icon circle purple">📂</div><span data-tr="importBackup">استيراد نسخة</span></div>
         <span class="arrow">‹</span>
       </button>
       <button class="setting-item owner-only" onclick="changeLang()">
-        <div class="left"><div class="s-icon circle blue">🌐</div><span>تغيير اللغة</span></div>
+        <div class="left"><div class="s-icon circle blue">🌐</div><span data-tr="changeLang">تغيير اللغة</span></div>
         <span class="arrow">‹</span>
       </button>
       <button class="setting-item owner-only" onclick="clearAll()">
-        <div class="left"><div class="s-icon circle red">🗑️</div><span>مسح كل البيانات</span></div>
+        <div class="left"><div class="s-icon circle red">🗑️</div><span data-tr="clearAll">مسح كل البيانات</span></div>
         <span class="arrow">‹</span>
       </button>
       <button class="setting-item owner-only" onclick="doLogout()" style="background:#fee2e2;color:#b91c1c;">
-        <div class="left"><div class="s-icon" style="background:#fff;color:#b91c1c;">🚪</div><span>تسجيل الخروج</span></div>
+        <div class="left"><div class="s-icon" style="background:#fff;color:#b91c1c;">🚪</div><span data-tr="logout">تسجيل الخروج</span></div>
         <span class="arrow" style="color:#b91c1c;">‹</span>
       </button>
-      <div class="version-tag">MonStock Pro v7.0 — © 2025</div>
+      <div class="version-tag">MonStock Pro v8.0 — © 2025</div>
     </div>
   </div>
 
   <div class="bottom-nav">
-    <button class="nav-item active" data-page="page-home" onclick="goTo('page-home')"><span class="nav-icon">🏠</span><span>الرئيسية</span></button>
-    <button class="nav-item" data-page="page-products" onclick="goTo('page-products')"><span class="nav-icon">📦</span><span>المنتجات</span></button>
-    <button class="nav-item" data-page="page-invoice" onclick="goTo('page-invoice')"><span class="nav-icon">🧾</span><span>الفواتير</span></button>
-    <button class="nav-item" data-page="page-reports" onclick="goTo('page-reports')"><span class="nav-icon">📈</span><span>التقارير</span></button>
-    <button class="nav-item" data-page="page-settings" onclick="goTo('page-settings')"><span class="nav-icon">⚙️</span><span>الإعدادات</span></button>
+    <button class="nav-item active" data-page="page-home" onclick="goTo('page-home')"><span class="nav-icon">🏠</span><span data-tr="navHome">الرئيسية</span></button>
+    <button class="nav-item" data-page="page-products" onclick="goTo('page-products')"><span class="nav-icon">📦</span><span data-tr="navProducts">المنتجات</span></button>
+    <button class="nav-item" data-page="page-invoice" onclick="goTo('page-invoice')"><span class="nav-icon">🧾</span><span data-tr="navSell">البيع</span></button>
+    <button class="nav-item" data-page="page-reports" onclick="goTo('page-reports')"><span class="nav-icon">📈</span><span data-tr="navReports">التقارير</span></button>
+    <button class="nav-item" data-page="page-settings" onclick="goTo('page-settings')"><span class="nav-icon">⚙️</span><span data-tr="navSettings">الإعدادات</span></button>
   </div>
 
+  <!-- PRODUCT MODAL -->
   <div class="modal-overlay" id="productModal">
     <div class="modal">
       <div class="modal-header"><h3 id="modalTitle">إضافة منتج</h3><button class="modal-close" onclick="closeModal('productModal')">✕</button></div>
       <input type="hidden" id="editId">
-      <div class="form-group"><label>اسم المنتج</label><input type="text" class="form-control" id="mName"></div>
-      <div class="form-group"><label>التصنيف</label><input type="text" class="form-control" id="mCategory" list="catList"><datalist id="catList"></datalist></div>
+      <div class="form-group"><label data-tr="name">اسم المنتج</label><input type="text" class="form-control" id="mName"></div>
+      <div class="form-group"><label data-tr="category">التصنيف</label><input type="text" class="form-control" id="mCategory" list="catList"><datalist id="catList"></datalist></div>
       <div class="form-row">
-        <div class="form-group"><label>الكمية</label><input type="number" class="form-control" id="mQty" min="0" value="0"></div>
-        <div class="form-group"><label>حد التنبيه</label><input type="number" class="form-control" id="mMin" min="0" value="5"></div>
+        <div class="form-group"><label data-tr="quantity">الكمية</label><input type="number" class="form-control" id="mQty" min="0" value="0"></div>
+        <div class="form-group"><label data-tr="minQty">حد التنبيه</label><input type="number" class="form-control" id="mMin" min="0" value="5"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>السعر</label><input type="number" class="form-control" id="mPrice" step="0.01" min="0" value="0"></div>
-        <div class="form-group"><label>الباركود</label>
-          <div style="display:flex;gap:6px;">
-            <input type="text" class="form-control" id="mBarcode" placeholder="Auto" style="flex:1;">
-            <button class="btn btn-info" type="button" style="width:auto;padding:0 12px;" onclick="scanForProduct()">📷</button>
-          </div>
+        <div class="form-group"><label data-tr="sellPrice">سعر البيع</label><input type="number" class="form-control" id="mPrice" step="0.01" min="0" value="0"></div>
+        <div class="form-group"><label data-tr="buyPrice">سعر الشراء</label><input type="number" class="form-control" id="mCost" step="0.01" min="0" value="0"></div>
+      </div>
+      <div class="form-group"><label data-tr="barcodeField">الباركود</label>
+        <div style="display:flex;gap:6px;">
+          <input type="text" class="form-control" id="mBarcode" placeholder="Auto" style="flex:1;">
+          <button class="btn btn-info" type="button" style="width:auto;padding:0 12px;" onclick="scanForProduct()">📷</button>
         </div>
       </div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="saveProduct()">💾 حفظ</button></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="saveProduct()">💾 <span data-tr="saveBtn">حفظ</span></button></div>
     </div>
   </div>
 
+  <!-- SCANNER MODAL -->
   <div class="modal-overlay" id="scannerModal">
     <div class="modal" style="max-height:95vh;">
-      <div class="modal-header"><h3>📷 قراءة الباركود</h3><button class="modal-close" onclick="closeScannerModal()">✕</button></div>
+      <div class="modal-header"><h3>📷 <span data-tr="scanTitle">قراءة الباركود</span></h3><button class="modal-close" onclick="closeScannerModal()">✕</button></div>
       <div id="scannerModalArea" style="width:100%;border-radius:12px;overflow:hidden;background:#000;min-height:280px;"></div>
-      <p style="font-size:12px;color:var(--text2);text-align:center;margin-top:12px;">وجّه الكاميرا نحو الباركود</p>
+      <p style="font-size:12px;color:var(--text2);text-align:center;margin-top:12px;" data-tr="scanHint">وجّه الكاميرا نحو الباركود</p>
     </div>
   </div>
 
+  <!-- EXPENSE MODAL -->
   <div class="modal-overlay" id="expenseModal">
     <div class="modal">
-      <div class="modal-header"><h3>إضافة مصروف</h3><button class="modal-close" onclick="closeModal('expenseModal')">✕</button></div>
-      <div class="form-group"><label>الوصف</label><input type="text" class="form-control" id="eDesc"></div>
+      <div class="modal-header"><h3 data-tr="addExpenseModal">إضافة مصروف</h3><button class="modal-close" onclick="closeModal('expenseModal')">✕</button></div>
+      <div class="form-group"><label data-tr="desc">الوصف</label><input type="text" class="form-control" id="eDesc"></div>
       <div class="form-row">
-        <div class="form-group"><label>المبلغ</label><input type="number" class="form-control" id="eAmount" step="0.01" min="0"></div>
-        <div class="form-group"><label>التصنيف</label>
+        <div class="form-group"><label data-tr="amount">المبلغ</label><input type="number" class="form-control" id="eAmount" step="0.01" min="0"></div>
+        <div class="form-group"><label data-tr="expenseCat">التصنيف</label>
           <select class="form-control" id="eCat">
-            <option value="general">عام</option>
-            <option value="rent">إيجار</option>
-            <option value="utilities">فواتير</option>
-            <option value="salaries">رواتب</option>
-            <option value="transport">نقل</option>
-            <option value="other">أخرى</option>
+            <option value="general" data-tr="catGeneral">عام</option>
+            <option value="rent" data-tr="catRent">إيجار</option>
+            <option value="utilities" data-tr="catUtilities">فواتير</option>
+            <option value="salaries" data-tr="catSalaries">رواتب</option>
+            <option value="transport" data-tr="catTransport">نقل</option>
+            <option value="other" data-tr="catOther">أخرى</option>
           </select>
         </div>
       </div>
-      <div class="form-group"><label>التاريخ</label><input type="date" class="form-control" id="eDate"></div>
-      <div class="form-group"><label>ملاحظة</label><input type="text" class="form-control" id="eNote"></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="saveExpense()">💾 حفظ</button></div>
+      <div class="form-group"><label data-tr="date">التاريخ</label><input type="date" class="form-control" id="eDate"></div>
+      <div class="form-group"><label data-tr="noteLbl">ملاحظة</label><input type="text" class="form-control" id="eNote"></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="saveExpense()">💾 <span data-tr="saveBtn">حفظ</span></button></div>
     </div>
   </div>
 
@@ -726,6 +871,7 @@ try {
 </script>
 
 <script>
+/* ==================== GLOBAL ==================== */
 let lang = localStorage.getItem('lang') || 'ar';
 let products = [], expenses = [], movements = [], invoices = [];
 let company = { name: 'MonStock Pro', phone: '', address: '' };
@@ -739,38 +885,156 @@ let isDark = localStorage.getItem('dark') === '1';
 let notifEnabled = false;
 let isSeller = false;
 
-const t = k => {
-  const dict = {
-    ar: {
-      syncing:'⏳ جارٍ المزامنة...', synced:'☁️ متزامن', offline:'⚠️ غير متصل',
-      dataRestored:'تم استرجاع بياناتك من السحابة ✅',
-      loginSuccess:'تم تسجيل الدخول ✅', registerSuccess:'تم إنشاء الحساب ✅',
-      logoutSuccess:'تم تسجيل الخروج', syncedNow:'تمت المزامنة ✅',
-      lowStockMsg:'يوجد {n} منتج أقل من الحد الأدنى',
-      notificationsEnabled:'✅ تم تفعيل الإشعارات', notificationsDenied:'❌ تم رفض الإشعارات',
-      lowStockNotif:'⚠️ منتجات ناقصة', lowStockNotifBody:'{n} منتج يحتاج إعادة تعبئة',
-      reportSummary:'ملخص الفترة', totalSales:'إجمالي المبيعات', totalProfit:'الربح',
-      invoicesCount:'عدد الفواتير', avgInvoice:'متوسط الفاتورة',
-      topProducts:'الأكثر مبيعًا', dailySales:'المبيعات اليومية',
-      noData:'لا توجد بيانات', units:'وحدة', sold:'مبيع'
-    },
-    fr: {
-      syncing:'⏳ Synchronisation...', synced:'☁️ Synchronisé', offline:'⚠️ Hors ligne',
-      dataRestored:'Données restaurées ✅',
-      loginSuccess:'Connecté ✅', registerSuccess:'Compte créé ✅',
-      logoutSuccess:'Déconnecté', syncedNow:'Synchronisé ✅',
-      lowStockMsg:'{n} produits sous le seuil',
-      notificationsEnabled:'✅ Notifications activées', notificationsDenied:'❌ Notifications refusées',
-      lowStockNotif:'⚠️ Stock faible', lowStockNotifBody:'{n} produits à réapprovisionner',
-      reportSummary:'Résumé', totalSales:'Total ventes', totalProfit:'Profit',
-      invoicesCount:'Factures', avgInvoice:'Facture moyenne',
-      topProducts:'Top produits', dailySales:'Ventes quotidiennes',
-      noData:'Aucune donnée', units:'unités', sold:'vendu'
-    }
-  };
-  return (dict[lang] && dict[lang][k]) || k;
+/* ==================== TRANSLATIONS ==================== */
+const I18N = {
+  ar: {
+    quickActions:'إجراءات سريعة', overview:'نظرة عامة',
+    products:'المنتجات', addProduct:'إضافة منتج', stockIn:'إدخال', stockOut:'إخراج',
+    sellBtn:'البيع', reportsBtn:'التقارير', expensesBtn:'المصروفات', barcodeBtn:'الباركود',
+    totalProducts:'عدد المنتجات', totalQty:'إجمالي الكميات', stockValue:'قيمة المخزون', lowStock:'منتجات ناقصة',
+    today:'اليوم', todaySales:'مبيعات اليوم', todayInvoices:'فواتير اليوم', todayProfit:'ربح اليوم', todayAvg:'متوسط الفاتورة',
+    searchProduct:'بحث عن منتج...', quickScan:'مسح سريع',
+    stockInTitle:'إدخال مخزون', stockOutTitle:'إخراج مخزون',
+    selectProduct:'اختر المنتج', quantity:'الكمية', noteOpt:'ملاحظة (اختياري)', confirm:'تأكيد',
+    totalToPay:'المجموع الإجمالي', items:'عنصر', pieces:'قطعة',
+    addClientAndTax:'إضافة عميل / ضريبة / خصم',
+    subtotal:'المجموع الفرعي', tax:'الضريبة', discount:'الخصم',
+    cart:'السلة', printA4:'A4', print58:'58mm', print80:'80mm', newSale:'بيع جديد',
+    recentInvoices:'آخر الفواتير',
+    reportsTitle:'التقارير المفصلة', choosePeriod:'اختر الفترة', from:'من', to:'إلى',
+    todayBtn:'اليوم', weekBtn:'الأسبوع', monthBtn:'الشهر', yearBtn:'السنة', apply:'تطبيق',
+    expensesTitle:'المصروفات', totalExpenses:'إجمالي المصروفات', addExpense:'إضافة مصروف', expensesList:'قائمة المصروفات',
+    barcodeTitle:'الباركود والملصقات', genBarcode:'توليد باركود منتج',
+    barcodeValue:'قيمة الباركود', barcodeFormat:'النوع', generate:'توليد',
+    scanBarcode:'قراءة الباركود', startScan:'بدء القراءة', scanHint:'وجّه الكاميرا نحو الباركود',
+    printLabels:'طباعة ملصقات', selectProductsQty:'اختر المنتجات والكميات', labelSize:'الحجم',
+    barcodeType:'نوع الباركود', labelElements:'عناصر الملصق', store:'المتجر', nameLbl:'الاسم', priceLbl:'السعر',
+    printAllLabels:'طباعة كل الملصقات',
+    movementsTitle:'سجل الحركات', statsTitle:'الإحصائيات', lowStockList:'المنتجات الناقصة',
+    settingsTitle:'الإعدادات', syncedCloud:'متزامن مع السحابة',
+    storeInfo:'معلومات المتجر', storeName:'اسم المتجر', phone:'الهاتف', address:'العنوان',
+    notifTitle:'التنبيهات', browserNotif:'إشعارات المتصفح', enable:'تفعيل',
+    notifHint:'ستصلك إشعارات عند نقص المخزون',
+    sellerSettings:'إعدادات البائع', sellerHint:'الرقم السري الذي يستخدمه البائع للدخول إلى التطبيق.',
+    sellerPin:'الرقم السري للبائع', savePin:'حفظ الرقم السري',
+    syncNow:'مزامنة الآن', exportBackup:'تصدير نسخة احتياطية', importBackup:'استيراد نسخة',
+    changeLang:'تغيير اللغة', clearAll:'مسح كل البيانات', logout:'تسجيل الخروج',
+    navHome:'الرئيسية', navProducts:'المنتجات', navSell:'البيع', navReports:'التقارير', navSettings:'الإعدادات',
+    name:'اسم المنتج', category:'التصنيف', minQty:'حد التنبيه',
+    sellPrice:'سعر البيع', buyPrice:'سعر الشراء', barcodeField:'الباركود',
+    saveBtn:'حفظ', scanTitle:'قراءة الباركود',
+    addExpenseModal:'إضافة مصروف', desc:'الوصف', amount:'المبلغ', expenseCat:'التصنيف',
+    catGeneral:'عام', catRent:'إيجار', catUtilities:'فواتير', catSalaries:'رواتب', catTransport:'نقل', catOther:'أخرى',
+    date:'التاريخ', noteLbl:'ملاحظة',
+    welcomeTitle:'مرحبًا بك 👋', welcomeSub:'إدارة مخزونك بسهولة وسرعة',
+    sellerBanner:'👨‍💼 أنت في وضع البائع — البيع فقط',
+    noProducts:'لا توجد منتجات', noInvoices:'لا توجد فواتير', noExpenses:'لا توجد مصروفات',
+    noMovements:'لا توجد حركات', allGood:'كل المنتجات جيدة',
+    reportSummary:'ملخص الفترة', totalSales:'إجمالي المبيعات', totalCost:'تكلفة البضاعة',
+    grossProfit:'الربح الإجمالي', netProfit:'الربح الصافي', profitMargin:'هامش الربح',
+    invoicesCount:'عدد الفواتير', avgInvoice:'متوسط الفاتورة', dailySales:'المبيعات اليومية',
+    topProducts:'الأكثر مبيعًا', salesLbl:'مبيعات', profitLbl:'ربح', printBtn:'طباعة',
+    currency:'دج', units:'وحدة'
+  },
+  fr: {
+    quickActions:'Actions rapides', overview:'Aperçu',
+    products:'Produits', addProduct:'Ajouter produit', stockIn:'Entrée', stockOut:'Sortie',
+    sellBtn:'Vente', reportsBtn:'Rapports', expensesBtn:'Dépenses', barcodeBtn:'Code-barres',
+    totalProducts:'Produits', totalQty:'Quantité totale', stockValue:'Valeur du stock', lowStock:'En alerte',
+    today:"Aujourd'hui", todaySales:'Ventes du jour', todayInvoices:'Factures du jour',
+    todayProfit:'Profit du jour', todayAvg:'Facture moyenne',
+    searchProduct:'Rechercher un produit...', quickScan:'Scan rapide',
+    stockInTitle:'Entrée de stock', stockOutTitle:'Sortie de stock',
+    selectProduct:'Sélectionner un produit', quantity:'Quantité', noteOpt:'Note (optionnel)', confirm:'Confirmer',
+    totalToPay:'Montant total', items:'articles', pieces:'pcs',
+    addClientAndTax:'Ajouter client / taxe / remise',
+    subtotal:'Sous-total', tax:'Taxe', discount:'Remise',
+    cart:'Panier', printA4:'A4', print58:'58mm', print80:'80mm', newSale:'Nouvelle vente',
+    recentInvoices:'Factures récentes',
+    reportsTitle:'Rapports détaillés', choosePeriod:'Choisir la période', from:'Du', to:'Au',
+    todayBtn:"Aujourd'hui", weekBtn:'Semaine', monthBtn:'Mois', yearBtn:'Année', apply:'Appliquer',
+    expensesTitle:'Dépenses', totalExpenses:'Total dépenses', addExpense:'Ajouter dépense', expensesList:'Liste des dépenses',
+    barcodeTitle:'Code-barres & Étiquettes', genBarcode:'Générer code-barres',
+    barcodeValue:'Valeur du code', barcodeFormat:'Format', generate:'Générer',
+    scanBarcode:'Scanner code-barres', startScan:'Démarrer', scanHint:'Pointez la caméra vers le code-barres',
+    printLabels:'Imprimer étiquettes', selectProductsQty:'Sélectionner produits et quantités', labelSize:'Taille',
+    barcodeType:'Type de code', labelElements:'Éléments étiquette', store:'Magasin', nameLbl:'Nom', priceLbl:'Prix',
+    printAllLabels:'Imprimer toutes les étiquettes',
+    movementsTitle:'Historique mouvements', statsTitle:'Statistiques', lowStockList:'Produits en alerte',
+    settingsTitle:'Paramètres', syncedCloud:'Synchronisé au cloud',
+    storeInfo:'Info magasin', storeName:'Nom du magasin', phone:'Téléphone', address:'Adresse',
+    notifTitle:'Notifications', browserNotif:'Notifications navigateur', enable:'Activer',
+    notifHint:'Vous recevrez des notifications quand le stock est faible',
+    sellerSettings:'Paramètres vendeur', sellerHint:"Code PIN utilisé par le vendeur pour accéder à l'application.",
+    sellerPin:'Code PIN vendeur', savePin:'Enregistrer PIN',
+    syncNow:'Synchroniser', exportBackup:'Exporter sauvegarde', importBackup:'Importer sauvegarde',
+    changeLang:'Changer langue', clearAll:'Tout effacer', logout:'Déconnexion',
+    navHome:'Accueil', navProducts:'Produits', navSell:'Vente', navReports:'Rapports', navSettings:'Paramètres',
+    name:'Nom du produit', category:'Catégorie', minQty:"Seuil d'alerte",
+    sellPrice:'Prix de vente', buyPrice:"Prix d'achat", barcodeField:'Code-barres',
+    saveBtn:'Enregistrer', scanTitle:'Scanner code-barres',
+    addExpenseModal:'Ajouter dépense', desc:'Description', amount:'Montant', expenseCat:'Catégorie',
+    catGeneral:'Général', catRent:'Loyer', catUtilities:'Factures', catSalaries:'Salaires', catTransport:'Transport', catOther:'Autre',
+    date:'Date', noteLbl:'Note',
+    welcomeTitle:'Bienvenue 👋', welcomeSub:'Gérez votre stock facilement',
+    sellerBanner:'👨‍💼 Mode vendeur — Vente uniquement',
+    noProducts:'Aucun produit', noInvoices:'Aucune facture', noExpenses:'Aucune dépense',
+    noMovements:'Aucun mouvement', allGood:'Tous les produits sont OK',
+    reportSummary:'Résumé de la période', totalSales:'Total ventes', totalCost:'Coût marchandise',
+    grossProfit:'Profit brut', netProfit:'Profit net', profitMargin:'Marge',
+    invoicesCount:'Nombre de factures', avgInvoice:'Facture moyenne', dailySales:'Ventes quotidiennes',
+    topProducts:'Top produits', salesLbl:'Ventes', profitLbl:'Profit', printBtn:'Imprimer',
+    currency:'DA', units:'unités'
+  }
 };
 
+const t = k => (I18N[lang] && I18N[lang][k]) || k;
+
+/* ==================== TRANSLATE ALL PAGES ==================== */
+function translateAll() {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.body.classList.toggle('ltr', lang === 'fr');
+
+  document.querySelectorAll('[data-tr]').forEach(el => {
+    const key = el.dataset.tr;
+    const val = t(key);
+    if (val) el.textContent = val;
+  });
+
+  // Currency displays
+  const heroCurrency = document.getElementById('heroCurrency');
+  if (heroCurrency) heroCurrency.textContent = t('currency');
+
+  // Translate select options for expense category
+  document.querySelectorAll('#eCat option[data-tr]').forEach(opt => {
+    const val = t(opt.dataset.tr);
+    if (val) opt.textContent = val;
+  });
+
+  // Translate placeholders
+  const si = document.getElementById('searchInput');
+  if (si) si.placeholder = '🔍 ' + t('searchProduct');
+  const ss = document.getElementById('sellSearch');
+  if (ss) ss.placeholder = lang === 'ar' ? '🔍 ابحث واضغط لإضافة' : '🔍 Chercher et cliquer pour ajouter';
+  const invC = document.getElementById('invClient');
+  if (invC) invC.placeholder = lang === 'ar' ? '👤 اسم العميل' : '👤 Nom du client';
+  const invP = document.getElementById('invPhone');
+  if (invP) invP.placeholder = lang === 'ar' ? '📞 الهاتف' : '📞 Téléphone';
+}
+
+function changeLang() {
+  lang = lang === 'ar' ? 'fr' : 'ar';
+  localStorage.setItem('lang', lang);
+  const btn = document.getElementById('langBtn');
+  if (btn) btn.textContent = lang === 'ar' ? 'FR' : 'ع';
+  translateAll();
+  refreshAll();
+  if (document.getElementById('page-reports').classList.contains('active')) generateReport();
+  showToast(lang === 'ar' ? '✅ العربية' : '✅ Français', 'success');
+}
+
+/* ==================== DARK MODE ==================== */
 function toggleDarkMode() {
   isDark = !isDark;
   localStorage.setItem('dark', isDark ? '1' : '0');
@@ -783,19 +1047,18 @@ function applyDarkMode() {
   if (btn) btn.textContent = isDark ? '☀️' : '🌙';
 }
 
+/* ==================== NOTIFICATIONS ==================== */
 async function enableNotifications() {
-  if (!('Notification' in window)) { showToast('الإشعارات غير مدعومة', 'error'); return; }
+  if (!('Notification' in window)) { showToast('Non supporté', 'error'); return; }
   try {
     const perm = await Notification.requestPermission();
     if (perm === 'granted') {
       notifEnabled = true;
       localStorage.setItem('notif', '1');
-      showToast(t('notificationsEnabled'), 'success');
-      document.getElementById('notifBtn').textContent = '✅ مفعّل';
+      showToast('✅ OK', 'success');
+      document.getElementById('notifBtn').textContent = '✅';
       checkLowStockNotify();
-    } else {
-      showToast(t('notificationsDenied'), 'error');
-    }
+    } else { showToast('❌ Refusé', 'error'); }
   } catch (e) {}
 }
 function checkLowStockNotify() {
@@ -803,19 +1066,19 @@ function checkLowStockNotify() {
   const low = products.filter(p => p.quantity <= p.minQuantity);
   if (low.length === 0) return;
   try {
-    new Notification(t('lowStockNotif'), {
-      body: t('lowStockNotifBody').replace('{n}', low.length),
+    new Notification(lang === 'ar' ? '⚠️ منتجات ناقصة' : '⚠️ Stock faible', {
+      body: `${low.length} ${lang === 'ar' ? 'منتج يحتاج إعادة تعبئة' : 'produits à réapprovisionner'}`,
       tag: 'lowstock'
     });
   } catch (e) {}
 }
 
+/* ==================== FIREBASE ==================== */
 window.addEventListener('fb-ready', () => { fbReady = true; startAuthListener(); });
 window.addEventListener('fb-error', () => { fbReady = false; });
 
 function startAuthListener() {
-  if (!window.FB || !fbReady) return;
-  if (isSeller) return;
+  if (!window.FB || !fbReady || isSeller) return;
   window.FB.onAuthStateChanged(window.FB.auth, async (user) => {
     if (isSeller) return;
     if (user) {
@@ -845,21 +1108,17 @@ async function loadFromCloud() {
       invoices = data.invoices || [];
       company = data.company || { name: 'MonStock Pro', phone: '', address: '' };
       saveLocal();
-      showToast(t('dataRestored'), 'success');
     } else {
       loadLocal();
       if (products.length > 0 || expenses.length > 0) await cloudSave();
     }
     setCloudStatus('synced');
-    refreshAll();
-    loadCompany();
-    checkLowStockNotify();
+    refreshAll(); loadCompany(); checkLowStockNotify();
     const range = getDefaultRange();
     const rf = document.getElementById('reportFrom'); if (rf) rf.value = range.from;
     const rt = document.getElementById('reportTo'); if (rt) rt.value = range.to;
     generateReport();
   } catch (e) {
-    console.error(e);
     setCloudStatus('offline');
     loadLocal(); refreshAll(); loadCompany();
   }
@@ -872,11 +1131,10 @@ async function cloudSave() {
     const userRef = window.FB.doc(window.FB.db, 'users', currentUser.uid);
     await window.FB.setDoc(userRef, {
       products, expenses, movements, invoices, company,
-      email: currentUser.email,
-      updatedAt: new Date().toISOString()
+      email: currentUser.email, updatedAt: new Date().toISOString()
     }, { merge: true });
     setCloudStatus('synced');
-  } catch (e) { console.error(e); setCloudStatus('offline'); }
+  } catch (e) { setCloudStatus('offline'); }
 }
 
 function scheduleSync() {
@@ -890,16 +1148,17 @@ function scheduleSync() {
 function setCloudStatus(status) {
   const el = document.getElementById('cloudStatus');
   if (!el) return;
-  if (isSeller) { el.className = 'cloud-status'; el.style.background = '#f59e0b'; el.textContent = '👨‍💼 وضع البائع'; return; }
+  if (isSeller) { el.className='cloud-status'; el.style.background='#f59e0b'; el.textContent='👨‍💼 '+t('sellerBanner').slice(0,20); return; }
   el.style.background = '';
-  if (status === 'syncing') { el.className = 'cloud-status syncing'; el.textContent = t('syncing'); }
-  else if (status === 'synced') { el.className = 'cloud-status synced'; el.textContent = t('synced'); }
-  else { el.className = 'cloud-status offline'; el.textContent = t('offline'); }
+  if (status === 'syncing') { el.className='cloud-status syncing'; el.textContent='⏳ '+t('syncedCloud'); }
+  else if (status === 'synced') { el.className='cloud-status synced'; el.textContent='☁️ '+t('syncedCloud'); }
+  else { el.className='cloud-status offline'; el.textContent='⚠️ Offline'; }
 }
 
 window.addEventListener('online', () => { if (currentUser && !isSeller) cloudSave(); });
 window.addEventListener('offline', () => setCloudStatus('offline'));
 
+/* ==================== LOCAL STORAGE ==================== */
 function saveLocal() {
   try {
     localStorage.setItem('monstock_products', JSON.stringify(products));
@@ -920,11 +1179,11 @@ function loadLocal() {
 }
 function save() { saveLocal(); scheduleSync(); }
 
+/* ==================== AUTH ==================== */
 function showAuthScreen() {
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('app').style.display = 'none';
-  const s = document.getElementById('splash');
-  if (s) s.style.display = 'none';
+  const s = document.getElementById('splash'); if (s) s.style.display = 'none';
 }
 function showApp() {
   isSeller = false;
@@ -934,16 +1193,15 @@ function showApp() {
   document.getElementById('app').style.display = 'flex';
   const s = document.getElementById('splash');
   if (s) {
-    s.style.display = 'flex';
-    s.classList.remove('hide');
-    setTimeout(() => { s.classList.add('hide'); setTimeout(() => s.style.display = 'none', 600); }, 1200);
+    s.style.display = 'flex'; s.classList.remove('hide');
+    setTimeout(() => { s.classList.add('hide'); setTimeout(() => s.style.display='none', 600); }, 1200);
   }
   const email = currentUser?.email || '';
   const ue = document.getElementById('userEmail'); if (ue) ue.textContent = email.split('@')[0];
   const ua = document.getElementById('userAv'); if (ua) ua.textContent = email.charAt(0).toUpperCase();
   const se = document.getElementById('settingsEmail'); if (se) se.textContent = email;
   const sa = document.getElementById('settingsAv'); if (sa) sa.textContent = email.charAt(0).toUpperCase();
-  applyLanguage();
+  translateAll();
   loadCompany();
   refreshAll();
 }
@@ -962,9 +1220,7 @@ function clearAuthErrors() {
   document.getElementById('registerError').classList.remove('show');
 }
 function showAuthError(boxId, msg) {
-  const el = document.getElementById(boxId);
-  el.textContent = msg;
-  el.classList.add('show');
+  const el = document.getElementById(boxId); el.textContent = msg; el.classList.add('show');
 }
 function errorMsg(code) {
   const map = {
@@ -984,13 +1240,13 @@ async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPass').value;
   if (!email || !email.includes('@')) return showAuthError('loginError', 'البريد غير صالح');
-  if (!pass || pass.length < 6) return showAuthError('loginError', 'كلمة المرور 6 أحرف على الأقل');
+  if (!pass || pass.length < 6) return showAuthError('loginError', 'كلمة المرور 6 أحرف');
   if (!fbReady) return showAuthError('loginError', 'تعذر الاتصال بالسحابة');
   document.getElementById('btnLogin').style.display = 'none';
   document.getElementById('loginLoading').classList.add('show');
   try {
     await window.FB.signIn(window.FB.auth, email, pass);
-    showToast(t('loginSuccess'), 'success');
+    showToast('✅', 'success');
   } catch (e) {
     showAuthError('loginError', errorMsg(e.code));
     document.getElementById('btnLogin').style.display = 'flex';
@@ -1003,14 +1259,14 @@ async function doRegister() {
   const pass = document.getElementById('registerPass').value;
   const pass2 = document.getElementById('registerPass2').value;
   if (!email || !email.includes('@')) return showAuthError('registerError', 'البريد غير صالح');
-  if (!pass || pass.length < 6) return showAuthError('registerError', 'كلمة المرور 6 أحرف على الأقل');
+  if (!pass || pass.length < 6) return showAuthError('registerError', 'كلمة المرور 6 أحرف');
   if (pass !== pass2) return showAuthError('registerError', 'كلمتا المرور غير متطابقتين');
   if (!fbReady) return showAuthError('registerError', 'تعذر الاتصال بالسحابة');
   document.getElementById('btnRegister').style.display = 'none';
   document.getElementById('registerLoading').classList.add('show');
   try {
     await window.FB.createUser(window.FB.auth, email, pass);
-    showToast(t('registerSuccess'), 'success');
+    showToast('✅', 'success');
   } catch (e) {
     showAuthError('registerError', errorMsg(e.code));
     document.getElementById('btnRegister').style.display = 'flex';
@@ -1022,21 +1278,18 @@ async function doLogout() {
   try {
     if (currentUser) await cloudSave();
     if (window.FB) await window.FB.signOut(window.FB.auth);
-    localStorage.removeItem('monstock_products');
-    localStorage.removeItem('monstock_expenses');
-    localStorage.removeItem('monstock_movements');
-    localStorage.removeItem('monstock_invoices');
-    localStorage.removeItem('monstock_company');
+    ['monstock_products','monstock_expenses','monstock_movements','monstock_invoices','monstock_company'].forEach(k => localStorage.removeItem(k));
     products = []; expenses = []; movements = []; invoices = [];
-    showToast(t('logoutSuccess'));
+    showToast('✅');
   } catch (e) {}
 }
 async function forceSync() {
   if (!currentUser) return;
   await cloudSave();
-  showToast(t('syncedNow'), 'success');
+  showToast('✅', 'success');
 }
 
+/* ==================== SELLER MODE ==================== */
 function switchToSeller() {
   document.getElementById('ownerCard').style.display = 'none';
   document.getElementById('sellerBox').style.display = 'block';
@@ -1054,9 +1307,7 @@ function switchToOwner() {
   document.getElementById('sellerError').classList.remove('show');
 }
 function showSellerError(msg) {
-  const el = document.getElementById('sellerError');
-  el.textContent = msg;
-  el.classList.add('show');
+  const el = document.getElementById('sellerError'); el.textContent = msg; el.classList.add('show');
 }
 async function doSellerLogin() {
   document.getElementById('sellerError').classList.remove('show');
@@ -1085,16 +1336,13 @@ function showSellerApp() {
   document.getElementById('authScreen').classList.add('hidden');
   document.getElementById('app').style.display = 'flex';
   document.body.classList.add('seller-mode');
-  const ue = document.getElementById('userEmail'); if (ue) ue.textContent = 'بائع';
+  const ue = document.getElementById('userEmail'); if (ue) ue.textContent = lang==='ar'?'بائع':'Vendeur';
   const ua = document.getElementById('userAv'); if (ua) ua.textContent = '👨‍💼';
   const ub = document.getElementById('userBadgeBtn'); if (ub) ub.onclick = null;
-  const cs = document.getElementById('cloudStatus');
-  if (cs) { cs.className = 'cloud-status'; cs.style.background = '#f59e0b'; cs.textContent = '👨‍💼 وضع البائع'; }
   const slb = document.getElementById('sellerLogoutBox'); if (slb) slb.style.display = 'block';
-  loadLocal();
-  applyLanguage();
-  refreshAll();
-  goTo('page-home');
+  const sb = document.getElementById('sellerBanner');
+  if (sb) { sb.innerHTML = `<div class="seller-mode-banner">${t('sellerBanner')}</div>`; sb.style.display = 'block'; }
+  loadLocal(); translateAll(); refreshAll(); goTo('page-invoice');
 }
 function sellerLogout() {
   if (!confirm('تسجيل خروج البائع؟')) return;
@@ -1105,71 +1353,57 @@ function sellerLogout() {
 }
 async function saveSellerPin() {
   const pin = document.getElementById('sSellerPin').value.trim();
-  if (!pin || pin.length < 4) return showToast('الرقم السري 4 أرقام على الأقل', 'error');
-  if (pin.length > 8) return showToast('الرقم السري 8 أرقام كحد أقصى', 'error');
+  if (!pin || pin.length < 4) return showToast('4 أرقام على الأقل', 'error');
+  if (pin.length > 8) return showToast('8 أرقام كحد أقصى', 'error');
   localStorage.setItem('monstock_seller_pin', pin);
   if (window.FB && currentUser && fbReady) {
     try {
       const ref = window.FB.doc(window.FB.db, 'config', 'seller_pin');
       await window.FB.setDoc(ref, { pin, owner: currentUser.email, updated: new Date().toISOString() }, { merge: true });
-      showToast('تم حفظ الرقم السري في السحابة ✅', 'success');
-    } catch (e) {
-      showToast('تم الحفظ محليًا فقط', 'error');
-    }
-  } else {
-    showToast('تم حفظ الرقم السري محليًا ✅', 'success');
-  }
+      showToast('✅', 'success');
+    } catch (e) { showToast('✅ Local', 'success'); }
+  } else { showToast('✅ Local', 'success'); }
 }
 function loadSellerPinToSettings() {
   const pin = localStorage.getItem('monstock_seller_pin') || '';
-  const el = document.getElementById('sSellerPin');
-  if (el) el.value = pin;
+  const el = document.getElementById('sSellerPin'); if (el) el.value = pin;
 }
 
-function applyLanguage() {
-  document.documentElement.lang = lang;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-  document.body.classList.toggle('ltr', lang === 'fr');
-  const btn = document.getElementById('langBtn');
-  if (btn) btn.textContent = lang === 'ar' ? 'FR' : 'ع';
-  const si = document.getElementById('searchInput');
-  if (si) si.placeholder = lang === 'ar' ? '🔍 بحث...' : '🔍 Rechercher...';
-  refreshAll();
-}
-function changeLang() {
-  lang = lang === 'ar' ? 'fr' : 'ar';
-  localStorage.setItem('lang', lang);
-  applyLanguage();
-}
+/* ==================== REFRESH ALL ==================== */
 function refreshAll() {
   renderProducts(); renderMovements(); renderExpenses(); renderStats();
   updateProductSelects(); updateCategoryList(); updateBarcodeSelect();
   updateInvoiceProductSelect(); renderInvoiceItems(); renderInvoiceSummary(); renderInvoices();
   renderLabelsProductList(); renderLowStockBanner(); renderTodayStats();
+  renderSellGrid(); updateHeroTotal();
 }
 
+/* ==================== RENDER HELPERS ==================== */
 function renderLowStockBanner() {
   const div = document.getElementById('lowStockBanner'); if (!div) return;
   const low = products.filter(p => p.quantity <= p.minQuantity);
   if (low.length === 0) { div.innerHTML = ''; return; }
   div.innerHTML = `<div class="alert-banner" onclick="goTo('page-products')">
     <div class="ai">⚠️</div>
-    <div class="at">${t('lowStockMsg').replace('{n}', low.length)}</div>
+    <div class="at">${low.length} ${lang==='ar'?'منتج أقل من الحد الأدنى':'produits sous le seuil'}</div>
     <div style="color:#92400e;font-size:18px;">›</div>
   </div>`;
 }
 function renderTodayStats() {
   const today = new Date().toISOString().split('T')[0];
-  const todayInvs = invoices.filter(i => {
-    const d = i.dateOnly || new Date(i.id).toISOString().split('T')[0];
-    return d === today;
-  });
+  const todayInvs = invoices.filter(i => (i.dateOnly || new Date(i.id).toISOString().split('T')[0]) === today);
   const totalToday = todayInvs.reduce((s, i) => s + Number(i.total || 0), 0);
-  const el1 = document.getElementById('todaySales');
-  const el2 = document.getElementById('todayInvoices');
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  if (el1) el1.textContent = totalToday.toFixed(2) + ' ' + c;
-  if (el2) el2.textContent = todayInvs.length;
+  const profitToday = todayInvs.reduce((s, i) => s + (i.items||[]).reduce((sum, it) => {
+    const p = products.find(x => x.id === it.productId);
+    const cost = p ? Number(p.cost || 0) : 0;
+    return sum + ((Number(it.price) - cost) * Number(it.qty));
+  }, 0), 0);
+  const avg = todayInvs.length > 0 ? totalToday / todayInvs.length : 0;
+  const c = t('currency');
+  const el1 = document.getElementById('todaySales'); if (el1) el1.textContent = totalToday.toFixed(2) + ' ' + c;
+  const el2 = document.getElementById('todayInvoices'); if (el2) el2.textContent = todayInvs.length;
+  const el3 = document.getElementById('todayProfit'); if (el3) el3.textContent = profitToday.toFixed(2) + ' ' + c;
+  const el4 = document.getElementById('todayAvg'); if (el4) el4.textContent = avg.toFixed(2) + ' ' + c;
 }
 function renderStats() {
   const totalQty = products.reduce((s, p) => s + Number(p.quantity || 0), 0);
@@ -1177,7 +1411,7 @@ function renderStats() {
   const totalExp = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
   const totalSales = invoices.reduce((s, i) => s + Number(i.total || 0), 0);
   const lowList = products.filter(p => p.quantity <= p.minQuantity);
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   ['miniProducts','statProducts2'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = products.length; });
   ['miniQty','statQty2'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = totalQty; });
   ['miniValue','statValue2'].forEach(id => { const e = document.getElementById(id); if (e) e.textContent = totalVal.toFixed(2) + ' ' + c; });
@@ -1187,7 +1421,7 @@ function renderStats() {
   const lowDiv = document.getElementById('lowStockList');
   if (!lowDiv) return;
   if (lowList.length === 0) {
-    lowDiv.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><p>كل المنتجات جيدة</p></div>`;
+    lowDiv.innerHTML = `<div class="empty-state"><div class="emoji">✅</div><p>${t('allGood')}</p></div>`;
   } else {
     lowDiv.innerHTML = lowList.map(p => `
       <div class="product-item low">
@@ -1204,9 +1438,9 @@ function renderProducts() {
   const filtered = products.filter(p =>
     p.name.toLowerCase().includes(f) || (p.category || '').toLowerCase().includes(f) || (p.barcode || '').toLowerCase().includes(f)
   );
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   if (filtered.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="emoji">📦</div><p>لا توجد منتجات</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="emoji">📦</div><p>${t('noProducts')}</p></div>`;
     return;
   }
   list.innerHTML = filtered.map(p => {
@@ -1225,7 +1459,7 @@ function renderProducts() {
 function renderMovements() {
   const list = document.getElementById('movementsList'); if (!list) return;
   if (movements.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="emoji">📋</div><p>لا توجد حركات</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="emoji">📋</div><p>${t('noMovements')}</p></div>`;
     return;
   }
   list.innerHTML = [...movements].reverse().slice(0, 100).map(m => `
@@ -1238,11 +1472,11 @@ function renderMovements() {
 }
 function renderExpenses() {
   const list = document.getElementById('expensesList'); if (!list) return;
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   const total = expenses.reduce((s, e) => s + Number(e.amount || 0), 0);
   const et = document.getElementById('expTotal'); if (et) et.textContent = total.toFixed(2) + ' ' + c;
   if (expenses.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="emoji">💸</div><p>لا توجد مصروفات</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="emoji">💸</div><p>${t('noExpenses')}</p></div>`;
     return;
   }
   list.innerHTML = [...expenses].reverse().map(e => `
@@ -1255,6 +1489,402 @@ function renderExpenses() {
   `).join('');
 }
 
+/* ==================== SELL GRID (Modern) ==================== */
+function renderSellGrid() {
+  const grid = document.getElementById('sellProductGrid'); if (!grid) return;
+  const search = (document.getElementById('sellSearch').value || '').toLowerCase();
+  const filtered = products.filter(p =>
+    !search || p.name.toLowerCase().includes(search) || (p.barcode || '').toLowerCase().includes(search)
+  ).slice(0, 40);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3);font-size:13px;">${t('noProducts')}</div>`;
+    return;
+  }
+  const c = t('currency');
+  grid.innerHTML = filtered.map(p => {
+    const out = p.quantity <= 0;
+    const emoji = p.category ? '📁' : '📦';
+    return `<div class="sell-prod-card ${out ? 'low-stock' : ''}" onclick="${out ? '' : `addToCart(${p.id})`}">
+      <div class="p-emoji">${emoji}</div>
+      <div class="p-name">${p.name}</div>
+      <div class="p-price">${p.price || 0} ${c}</div>
+      <div class="p-stock">${p.quantity} ${t('pieces')}</div>
+    </div>`;
+  }).join('');
+}
+
+function addToCart(productId) {
+  const p = products.find(x => x.id === productId); if (!p) return;
+  if (p.quantity <= 0) return showToast('❌ Stock 0', 'error');
+  const existing = currentInvoiceItems.find(i => i.productId === productId);
+  if (existing) {
+    if (existing.qty >= p.quantity) return showToast('❌ Stock max', 'error');
+    existing.qty += 1;
+  } else {
+    currentInvoiceItems.push({ productId: p.id, name: p.name, price: Number(p.price || 0), cost: Number(p.cost || 0), qty: 1 });
+  }
+  renderInvoiceItems(); renderInvoiceSummary(); updateHeroTotal();
+}
+
+function updateHeroTotal() {
+  const sums = renderInvoiceSummary();
+  const heroTotal = document.getElementById('heroTotal');
+  const heroItems = document.getElementById('heroItems');
+  const heroQty = document.getElementById('heroQty');
+  const cartCount = document.getElementById('cartCount');
+  if (heroTotal) heroTotal.textContent = sums.total.toFixed(2);
+  if (heroItems) heroItems.textContent = currentInvoiceItems.length;
+  if (heroQty) heroQty.textContent = currentInvoiceItems.reduce((s, i) => s + i.qty, 0);
+  if (cartCount) cartCount.textContent = currentInvoiceItems.reduce((s, i) => s + i.qty, 0);
+}
+
+function toggleExtras() {
+  const s = document.getElementById('extrasSection');
+  if (s) s.classList.toggle('show');
+}
+
+/* ==================== SELECTS ==================== */
+function updateProductSelects() {
+  const opts = products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
+  const ph = `<option value="">-- ${t('selectProduct')} --</option>`;
+  const a = document.getElementById('inProduct'); if (a) a.innerHTML = ph + opts;
+  const b = document.getElementById('outProduct'); if (b) b.innerHTML = ph + opts;
+}
+function updateCategoryList() {
+  const cats = [...new Set(products.map(p => p.category).filter(Boolean))];
+  const cl = document.getElementById('catList'); if (cl) cl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
+}
+function updateBarcodeSelect() {
+  const sel = document.getElementById('bcProduct'); if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+function updateInvoiceProductSelect() {
+  const sel = document.getElementById('invProductSelect'); if (!sel) return;
+  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
+}
+
+/* ==================== PRODUCT CRUD ==================== */
+function openAddModal() {
+  document.getElementById('modalTitle').textContent = t('addProduct');
+  document.getElementById('editId').value = '';
+  document.getElementById('mName').value = '';
+  document.getElementById('mCategory').value = '';
+  document.getElementById('mQty').value = 0;
+  document.getElementById('mMin').value = 5;
+  document.getElementById('mPrice').value = 0;
+  document.getElementById('mCost').value = 0;
+  document.getElementById('mBarcode').value = '';
+  const d = document.getElementById('deleteInModal'); if (d) d.remove();
+  document.getElementById('productModal').classList.add('active');
+}
+function openEditModal(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  document.getElementById('modalTitle').textContent = t('saveBtn');
+  document.getElementById('editId').value = p.id;
+  document.getElementById('mName').value = p.name;
+  document.getElementById('mCategory').value = p.category || '';
+  document.getElementById('mQty').value = p.quantity;
+  document.getElementById('mMin').value = p.minQuantity;
+  document.getElementById('mPrice').value = p.price || 0;
+  document.getElementById('mCost').value = p.cost || 0;
+  document.getElementById('mBarcode').value = p.barcode || '';
+  const btns = document.querySelector('#productModal .btn-group');
+  let del = document.getElementById('deleteInModal');
+  if (!del) {
+    del = document.createElement('button');
+    del.id = 'deleteInModal'; del.className = 'btn btn-danger'; del.innerHTML = '🗑️';
+    del.onclick = () => { deleteProduct(p.id); closeModal('productModal'); };
+    btns.appendChild(del);
+  }
+  document.getElementById('productModal').classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  const d = document.getElementById('deleteInModal');
+  if (d && id === 'productModal') d.remove();
+}
+function saveProduct() {
+  const id = document.getElementById('editId').value;
+  const name = document.getElementById('mName').value.trim();
+  const category = document.getElementById('mCategory').value.trim();
+  const quantity = Number(document.getElementById('mQty').value) || 0;
+  const minQuantity = Number(document.getElementById('mMin').value) || 0;
+  const price = Number(document.getElementById('mPrice').value) || 0;
+  const cost = Number(document.getElementById('mCost').value) || 0;
+  let barcode = document.getElementById('mBarcode').value.trim();
+  if (!name) return showToast('❌', 'error');
+  if (!barcode) barcode = 'MS' + Date.now().toString().slice(-10);
+  if (id) {
+    const p = products.find(x => x.id == id);
+    if (p) Object.assign(p, { name, category, quantity, minQuantity, price, cost, barcode });
+    showToast('✅', 'success');
+  } else {
+    products.push({ id: Date.now(), name, category, quantity, minQuantity, price, cost, barcode });
+    showToast('✅', 'success');
+  }
+  save(); refreshAll(); closeModal('productModal'); checkLowStockNotify();
+}
+function deleteProduct(id) {
+  if (!confirm('?')) return;
+  products = products.filter(p => p.id !== id);
+  delete labelQuantities[id];
+  save(); refreshAll(); showToast('🗑️', 'success');
+}
+function doStockIn() {
+  const id = Number(document.getElementById('inProduct').value);
+  const qty = Number(document.getElementById('inQty').value);
+  const note = document.getElementById('inNote').value.trim();
+  if (!id) return showToast('❌', 'error');
+  if (!qty || qty <= 0) return showToast('❌', 'error');
+  const p = products.find(x => x.id === id); if (!p) return;
+  p.quantity += qty;
+  movements.push({ date: new Date().toLocaleString(), productName: p.name, type: 'in', quantity: qty, note: note || 'IN' });
+  save(); refreshAll();
+  document.getElementById('inQty').value = '';
+  document.getElementById('inNote').value = '';
+  showToast('✅', 'success'); goTo('page-home');
+}
+function doStockOut() {
+  const id = Number(document.getElementById('outProduct').value);
+  const qty = Number(document.getElementById('outQty').value);
+  const note = document.getElementById('outNote').value.trim();
+  if (!id) return showToast('❌', 'error');
+  if (!qty || qty <= 0) return showToast('❌', 'error');
+  const p = products.find(x => x.id === id); if (!p) return;
+  if (qty > p.quantity) return showToast('❌', 'error');
+  p.quantity -= qty;
+  movements.push({ date: new Date().toLocaleString(), productName: p.name, type: 'out', quantity: qty, note: note || 'OUT' });
+  save(); refreshAll();
+  document.getElementById('outQty').value = '';
+  document.getElementById('outNote').value = '';
+  showToast('✅', 'success'); goTo('page-home');
+  checkLowStockNotify();
+}
+
+/* ==================== EXPENSES ==================== */
+function openExpenseModal() {
+  document.getElementById('eDesc').value = '';
+  document.getElementById('eAmount').value = '';
+  document.getElementById('eCat').value = 'general';
+  document.getElementById('eDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('eNote').value = '';
+  document.getElementById('expenseModal').classList.add('active');
+}
+function saveExpense() {
+  const description = document.getElementById('eDesc').value.trim();
+  const amount = Number(document.getElementById('eAmount').value);
+  const category = document.getElementById('eCat').value;
+  const date = document.getElementById('eDate').value;
+  const note = document.getElementById('eNote').value.trim();
+  if (!description) return showToast('❌', 'error');
+  if (!amount || amount <= 0) return showToast('❌', 'error');
+  expenses.push({ id: Date.now(), description, amount, category, date, note });
+  save(); renderExpenses(); renderStats(); closeModal('expenseModal');
+  showToast('✅', 'success');
+}
+function deleteExpense(id) {
+  if (!confirm('?')) return;
+  expenses = expenses.filter(e => e.id !== id);
+  save(); renderExpenses(); renderStats(); showToast('🗑️', 'success');
+}
+
+/* ==================== INVOICES ==================== */
+function addInvoiceItem() {
+  const id = Number(document.getElementById('invProductSelect').value);
+  if (!id) return showToast('❌', 'error');
+  addToCart(id);
+  document.getElementById('invProductSelect').value = '';
+}
+function renderInvoiceItems() {
+  const div = document.getElementById('invoiceItems'); if (!div) return;
+  const c = t('currency');
+  if (currentInvoiceItems.length === 0) {
+    div.innerHTML = `<div class="empty-state" style="padding:24px 10px;"><div class="emoji" style="font-size:36px;">🛒</div><p style="font-size:13px;">${lang==='ar'?'السلة فارغة':'Panier vide'}</p></div>`;
+    return;
+  }
+  div.innerHTML = currentInvoiceItems.map((item, i) => `
+    <div class="cart-item">
+      <button class="ci-del" onclick="removeInvoiceItem(${i})">🗑️</button>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">${item.price} ${c}</div>
+      </div>
+      <div class="ci-qty">
+        <button class="minus" onclick="updateInvoiceItemQty(${i}, ${item.qty - 1})">−</button>
+        <span class="num">${item.qty}</span>
+        <button onclick="updateInvoiceItemQty(${i}, ${item.qty + 1})">+</button>
+      </div>
+      <div class="ci-total">${(item.price * item.qty).toFixed(2)}</div>
+    </div>
+  `).join('');
+}
+function updateInvoiceItemQty(index, value) {
+  const item = currentInvoiceItems[index];
+  const p = products.find(x => x.id === item.productId);
+  let q = Number(value) || 1;
+  if (q <= 0) q = 1;
+  if (p && q > p.quantity) q = p.quantity;
+  item.qty = q;
+  renderInvoiceItems(); renderInvoiceSummary(); updateHeroTotal();
+}
+function removeInvoiceItem(index) {
+  currentInvoiceItems.splice(index, 1);
+  renderInvoiceItems(); renderInvoiceSummary(); updateHeroTotal();
+}
+function renderInvoiceSummary() {
+  const subtotal = currentInvoiceItems.reduce((s, i) => s + (i.price * i.qty), 0);
+  const taxRate = Number(document.getElementById('invTax').value) || 0;
+  const discount = Number(document.getElementById('invDiscount').value) || 0;
+  const taxAmount = subtotal * taxRate / 100;
+  const total = subtotal + taxAmount - discount;
+  const c = t('currency');
+  const e1 = document.getElementById('invSubtotal'); if (e1) e1.textContent = subtotal.toFixed(2) + ' ' + c;
+  const e2 = document.getElementById('invTaxAmount'); if (e2) e2.textContent = taxAmount.toFixed(2) + ' ' + c;
+  const e3 = document.getElementById('invDiscountAmount'); if (e3) e3.textContent = discount.toFixed(2) + ' ' + c;
+  const e4 = document.getElementById('invTotal'); if (e4) e4.textContent = total.toFixed(2) + ' ' + c;
+  return { subtotal, taxRate, taxAmount, discount, total };
+}
+function resetInvoice() {
+  currentInvoiceItems = [];
+  document.getElementById('invClient').value = '';
+  document.getElementById('invPhone').value = '';
+  document.getElementById('invTax').value = 0;
+  document.getElementById('invDiscount').value = 0;
+  renderInvoiceItems(); renderInvoiceSummary(); updateHeroTotal();
+}
+function saveAndPrintInvoice(mode = 'a4') {
+  if (currentInvoiceItems.length === 0) return showToast(lang==='ar'?'أضف منتجات أولاً':'Ajoutez des produits', 'error');
+  const client = document.getElementById('invClient').value.trim() || '-';
+  const phone = document.getElementById('invPhone').value.trim();
+  const sums = renderInvoiceSummary();
+  for (const item of currentInvoiceItems) {
+    const p = products.find(x => x.id === item.productId);
+    if (p && item.qty > p.quantity) return showToast('❌ ' + p.name, 'error');
+  }
+  const invoice = {
+    id: Date.now(),
+    number: 'INV-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(invoices.length + 1).padStart(3, '0'),
+    date: new Date().toLocaleString(),
+    dateOnly: new Date().toISOString().split('T')[0],
+    client, phone,
+    items: currentInvoiceItems.map(i => ({ ...i })),
+    subtotal: sums.subtotal, taxRate: sums.taxRate, taxAmount: sums.taxAmount,
+    discount: sums.discount, total: sums.total, lang: lang,
+    seller: isSeller ? 'seller' : 'owner'
+  };
+  for (const item of currentInvoiceItems) {
+    const p = products.find(x => x.id === item.productId);
+    if (p) {
+      p.quantity -= item.qty;
+      movements.push({ date: new Date().toLocaleString(), productName: p.name, type: 'out', quantity: item.qty, note: invoice.number });
+    }
+  }
+  invoices.push(invoice);
+  save(); refreshAll();
+  if (mode === 'thermal58') printThermalInvoice(invoice, 58);
+  else if (mode === 'thermal80') printThermalInvoice(invoice, 80);
+  else printInvoice(invoice);
+  showToast('✅', 'success');
+  currentInvoiceItems = [];
+  document.getElementById('invClient').value = '';
+  document.getElementById('invPhone').value = '';
+  document.getElementById('invTax').value = 0;
+  document.getElementById('invDiscount').value = 0;
+  document.getElementById('extrasSection').classList.remove('show');
+  renderInvoiceItems(); renderInvoiceSummary(); updateHeroTotal();
+  checkLowStockNotify();
+}
+function printInvoice(invoice) {
+  const el = document.getElementById('printInvoice');
+  const c = t('currency');
+  const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
+  const itemsRows = invoice.items.map(i => `<tr><td>${i.name}</td><td>${i.price.toFixed(2)} ${c}</td><td>${i.qty}</td><td>${(i.price * i.qty).toFixed(2)} ${c}</td></tr>`).join('');
+  const taxRow = invoice.taxAmount > 0 ? `<div class="row"><span>${t('tax')} (${invoice.taxRate}%)</span><span>${invoice.taxAmount.toFixed(2)} ${c}</span></div>` : '';
+  const discountRow = invoice.discount > 0 ? `<div class="row"><span>${t('discount')}</span><span>-${invoice.discount.toFixed(2)} ${c}</span></div>` : '';
+  el.innerHTML = `<div dir="${dir}" class="inv-a4">
+    <div class="inv-header">
+      <div class="company"><h1>📦 ${company.name || 'MonStock Pro'}</h1>
+        ${company.phone ? `<p>📞 ${company.phone}</p>` : ''}
+        ${company.address ? `<p>📍 ${company.address}</p>` : ''}
+      </div>
+      <div class="meta"><h2>${lang==='ar'?'فاتورة':'Facture'}</h2>
+        <p><b>${lang==='ar'?'الرقم':'N°'}:</b> ${invoice.number}</p>
+        <p><b>${lang==='ar'?'التاريخ':'Date'}:</b> ${invoice.date}</p>
+      </div>
+    </div>
+    <div class="inv-client"><b>${lang==='ar'?'العميل':'Client'}:</b> ${invoice.client}${invoice.phone ? ' — 📞 ' + invoice.phone : ''}</div>
+    <table class="inv-table"><thead><tr><th>${lang==='ar'?'المنتج':'Produit'}</th><th>${lang==='ar'?'السعر':'Prix'}</th><th>${lang==='ar'?'الكمية':'Qté'}</th><th>${lang==='ar'?'المجموع':'Total'}</th></tr></thead><tbody>${itemsRows}</tbody></table>
+    <div class="inv-totals">
+      <div class="row"><span>${t('subtotal')}</span><span>${invoice.subtotal.toFixed(2)} ${c}</span></div>
+      ${taxRow}${discountRow}
+      <div class="row total"><span>${lang==='ar'?'الإجمالي':'Total'}</span><span>${invoice.total.toFixed(2)} ${c}</span></div>
+    </div>
+    <div class="inv-thanks">${lang==='ar'?'شكرًا لتعاملكم معنا':'Merci pour votre visite'}</div>
+    <div class="inv-footer">${company.name || 'MonStock Pro'}</div>
+  </div>`;
+  setTimeout(() => window.print(), 300);
+}
+function printThermalInvoice(invoice, width) {
+  const el = document.getElementById('printInvoice');
+  const c = t('currency');
+  const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
+  const fs = width === 58 ? '10px' : '12px';
+  const tfs = width === 58 ? '14px' : '16px';
+  const itemsRows = invoice.items.map(i => `<div style="display:flex;justify-content:space-between;font-size:${fs};margin:3px 0;"><span style="flex:1;">${i.name}</span><span style="margin:0 4px;">x${i.qty}</span><span>${(i.price * i.qty).toFixed(2)}</span></div>`).join('');
+  el.innerHTML = `<style>@page{size:${width}mm auto;margin:0;}</style>
+    <div dir="${dir}" style="font-family:'Courier New',monospace;padding:4mm 3mm;color:#000;width:${width}mm;box-sizing:border-box;">
+      <div style="text-align:center;font-weight:700;font-size:${tfs};margin-bottom:4px;">${company.name || 'MonStock Pro'}</div>
+      ${company.phone ? `<div style="text-align:center;font-size:${fs};">📞 ${company.phone}</div>` : ''}
+      <div style="text-align:center;font-size:${fs};margin:6px 0;">-------- ${lang==='ar'?'فاتورة':'Facture'} --------</div>
+      <div style="font-size:${fs};">${lang==='ar'?'الرقم':'N°'}: ${invoice.number}</div>
+      <div style="font-size:${fs};">${lang==='ar'?'التاريخ':'Date'}: ${invoice.date}</div>
+      <div style="font-size:${fs};">${lang==='ar'?'العميل':'Client'}: ${invoice.client}</div>
+      <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
+      ${itemsRows}
+      <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
+      <div style="display:flex;justify-content:space-between;font-weight:700;font-size:${tfs};border-top:2px solid #000;padding-top:4px;margin-top:6px;"><span>${lang==='ar'?'الإجمالي':'Total'}</span><span>${invoice.total.toFixed(2)} ${c}</span></div>
+      <div style="text-align:center;font-size:${fs};margin-top:10px;">${lang==='ar'?'شكرًا لتعاملكم معنا':'Merci !'}</div>
+    </div>`;
+  setTimeout(() => window.print(), 300);
+}
+function renderInvoices() {
+  const list = document.getElementById('invoicesList'); if (!list) return;
+  const c = t('currency');
+  if (invoices.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="emoji">🧾</div><p>${t('noInvoices')}</p></div>`;
+    return;
+  }
+  list.innerHTML = [...invoices].reverse().slice(0, 30).map(inv => `
+    <div class="movement-item invoice" style="flex-wrap:wrap;">
+      <div class="m-icon">🧾</div>
+      <div class="m-info"><h4>${inv.number}</h4><span>${inv.client} • ${inv.date}</span></div>
+      <div class="m-qty">${Number(inv.total).toFixed(2)} ${c}</div>
+      <div style="display:flex; gap:6px; width:100%; margin-top:8px; flex-wrap:wrap;">
+        <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'a4')">🖨️ A4</button>
+        <button class="btn btn-warning" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal58')">🧾 58</button>
+        <button class="btn btn-info" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal80')">🧾 80</button>
+        <button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${inv.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+function reprintInvoice(id, mode = 'a4') {
+  const inv = invoices.find(x => x.id === id); if (!inv) return;
+  if (mode === 'thermal58') printThermalInvoice(inv, 58);
+  else if (mode === 'thermal80') printThermalInvoice(inv, 80);
+  else printInvoice(inv);
+}
+function deleteInvoice(id) {
+  if (!confirm('?')) return;
+  invoices = invoices.filter(x => x.id !== id);
+  save(); renderInvoices(); renderStats(); renderTodayStats();
+  showToast('🗑️', 'success');
+}
+
+/* ==================== REPORTS ==================== */
 function getDefaultRange() {
   const today = new Date();
   const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -1275,10 +1905,11 @@ function generateReport() {
   const from = document.getElementById('reportFrom').value;
   const to = document.getElementById('reportTo').value;
   const content = document.getElementById('reportContent'); if (!content) return;
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   if (!from || !to) { content.innerHTML = ''; return; }
   const fromDate = new Date(from);
   const toDate = new Date(to); toDate.setHours(23, 59, 59);
+
   const periodInvoices = invoices.filter(inv => {
     const d = inv.dateOnly ? new Date(inv.dateOnly) : new Date(inv.id);
     return d >= fromDate && d <= toDate;
@@ -1288,393 +1919,108 @@ function generateReport() {
     const d = new Date(e.date);
     return d >= fromDate && d <= toDate;
   });
+
   const totalSales = periodInvoices.reduce((s, i) => s + Number(i.total || 0), 0);
   const totalExp = periodExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
-  const totalProfit = totalSales - totalExp;
+  const totalCost = periodInvoices.reduce((s, inv) => s + (inv.items || []).reduce((sum, item) => {
+    const p = products.find(x => x.id === item.productId);
+    return sum + ((p ? Number(p.cost || 0) : 0) * Number(item.qty));
+  }, 0), 0);
+  const grossProfit = totalSales - totalCost;
+  const netProfit = totalSales - totalExp;
+  const margin = totalSales > 0 ? (netProfit / totalSales * 100) : 0;
   const avg = periodInvoices.length > 0 ? totalSales / periodInvoices.length : 0;
-  const dailySales = {};
-  const days = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
+
+  const dailyData = {};
+  const days = Math.ceil((toDate - fromDate) / (1000*60*60*24)) + 1;
   for (let i = 0; i < days && i < 60; i++) {
     const d = new Date(fromDate); d.setDate(d.getDate() + i);
-    const key = d.toISOString().split('T')[0];
-    dailySales[key] = 0;
+    dailyData[d.toISOString().split('T')[0]] = { sales: 0, profit: 0 };
   }
   periodInvoices.forEach(inv => {
     const key = inv.dateOnly || new Date(inv.id).toISOString().split('T')[0];
-    if (dailySales[key] !== undefined) dailySales[key] += Number(inv.total || 0);
+    if (dailyData[key]) {
+      dailyData[key].sales += Number(inv.total || 0);
+      const cost = (inv.items||[]).reduce((sum, item) => {
+        const p = products.find(x => x.id === item.productId);
+        return sum + ((p ? Number(p.cost || 0) : 0) * Number(item.qty));
+      }, 0);
+      dailyData[key].profit += (Number(inv.total || 0) - cost);
+    }
   });
+  const maxVal = Math.max(...Object.values(dailyData).map(d => Math.max(d.sales, d.profit)), 1);
+  const chartBars = Object.entries(dailyData).map(([date, data]) => {
+    const hS = Math.max((data.sales / maxVal) * 130, 4);
+    const hP = Math.max((data.profit / maxVal) * 130, 4);
+    return `<div style="display:flex;gap:2px;flex:1;min-width:32px;flex-direction:column;align-items:center;">
+      <div style="display:flex;gap:2px;align-items:flex-end;height:130px;">
+        <div class="chart-bar" style="height:${hS}px;min-width:14px;" title="${date}: ${data.sales.toFixed(2)}">
+          ${data.sales > 0 ? `<div class="bar-value" style="font-size:8px;">${data.sales.toFixed(0)}</div>` : ''}
+        </div>
+        <div class="chart-bar profit" style="height:${hP}px;min-width:14px;" title="${date}: ${data.profit.toFixed(2)}">
+          ${data.profit > 0 ? `<div class="bar-value" style="font-size:8px;">${data.profit.toFixed(0)}</div>` : ''}
+        </div>
+      </div>
+      <div style="margin-top:4px;font-size:9px;color:var(--text3);">${date.slice(5)}</div>
+    </div>`;
+  }).join('');
+
   const productSales = {};
   periodInvoices.forEach(inv => {
     (inv.items || []).forEach(item => {
-      if (!productSales[item.productId]) productSales[item.productId] = { name: item.name, qty: 0, total: 0 };
+      if (!productSales[item.productId]) productSales[item.productId] = { name: item.name, qty: 0, total: 0, profit: 0 };
+      const p = products.find(x => x.id === item.productId);
+      const cost = p ? Number(p.cost || 0) : 0;
       productSales[item.productId].qty += item.qty;
       productSales[item.productId].total += item.price * item.qty;
+      productSales[item.productId].profit += (item.price - cost) * item.qty;
     });
   });
   const top = Object.values(productSales).sort((a, b) => b.total - a.total).slice(0, 5);
-  const maxDaily = Math.max(...Object.values(dailySales), 1);
-  const chartBars = Object.entries(dailySales).map(([date, val]) => {
-    const h = Math.max((val / maxDaily) * 130, 4);
-    return `<div class="chart-bar" style="height:${h}px;" title="${date}: ${val.toFixed(2)} ${c}">
-      ${val > 0 ? `<div class="bar-value">${val.toFixed(0)}</div>` : ''}
-      <div class="bar-label">${date.slice(5)}</div>
-    </div>`;
-  }).join('');
   const rankClass = ['gold', 'silver', 'bronze', '', ''];
   const topHtml = top.length > 0 ? top.map((p, i) => `
     <div class="top-product">
       <div class="rank ${rankClass[i] || ''}">${i + 1}</div>
-      <div class="tp-info"><h5>${p.name}</h5><span>${p.qty} ${t('units')}</span></div>
+      <div class="tp-info"><h5>${p.name}</h5><span>${p.qty} ${t('units')} • ${t('profitLbl')} ${p.profit.toFixed(2)}</span></div>
       <div class="tp-val">${p.total.toFixed(2)} ${c}</div>
     </div>
-  `).join('') : `<div class="empty-state" style="padding:20px;"><p style="font-size:13px;">${t('noData')}</p></div>`;
+  `).join('') : `<div class="empty-state" style="padding:20px;"><p style="font-size:13px;">—</p></div>`;
+
   content.innerHTML = `
     <div class="date-pill">📅 ${from} → ${to}</div>
     <div class="card">
       <h3 class="card-title">📊 ${t('reportSummary')}</h3>
       <div class="report-row"><span class="rl">${t('totalSales')}</span><span class="rv">${totalSales.toFixed(2)} ${c}</span></div>
-      <div class="report-row"><span class="rl">المصروفات</span><span class="rv">${totalExp.toFixed(2)} ${c}</span></div>
-      <div class="report-row"><span class="rl">${t('totalProfit')}</span><span class="rv" style="color:${totalProfit >= 0 ? 'var(--ok)' : 'var(--err)'}">${totalProfit.toFixed(2)} ${c}</span></div>
+      <div class="report-row"><span class="rl">${t('totalCost')}</span><span class="rv">${totalCost.toFixed(2)} ${c}</span></div>
+      <div class="report-row profit"><span class="rl">${t('grossProfit')}</span><span class="rv">${grossProfit.toFixed(2)} ${c}</span></div>
+      <div class="report-row"><span class="rl">${t('expensesTitle')}</span><span class="rv" style="color:var(--err)">-${totalExp.toFixed(2)} ${c}</span></div>
+      <div class="report-row ${netProfit >= 0 ? 'profit' : 'loss'}"><span class="rl">${t('netProfit')}</span><span class="rv">${netProfit.toFixed(2)} ${c}</span></div>
+      <div class="report-row"><span class="rl">${t('profitMargin')}</span><span class="rv" style="color:${margin >= 0 ? 'var(--ok)' : 'var(--err)'}">${margin.toFixed(1)}%</span></div>
       <div class="report-row"><span class="rl">${t('invoicesCount')}</span><span class="rv">${periodInvoices.length}</span></div>
       <div class="report-row total"><span class="rl">${t('avgInvoice')}</span><span class="rv">${avg.toFixed(2)} ${c}</span></div>
     </div>
     <div class="card">
-      <h3 class="card-title">📈 ${t('dailySales')}</h3>
-      <div class="chart-container"><div class="chart">${chartBars}</div></div>
+      <h3 class="card-title">📈 ${t('dailySales')} + ${t('profitLbl')}</h3>
+      <div class="chart-container"><div class="chart" style="align-items:flex-end;gap:8px;padding-bottom:22px;">${chartBars}</div></div>
+      <div class="chart-legend">
+        <span><span class="legend-dot sales"></span> ${t('salesLbl')}</span>
+        <span><span class="legend-dot profit"></span> ${t('profitLbl')}</span>
+      </div>
     </div>
     <div class="card">
       <h3 class="card-title">🏆 ${t('topProducts')}</h3>
       ${topHtml}
     </div>
-    <button class="btn btn-purple" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn btn-purple" onclick="window.print()">🖨️ ${t('printBtn')}</button>
   `;
 }
 
-function updateProductSelects() {
-  const opts = products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
-  const ph = `<option value="">-- اختر --</option>`;
-  const a = document.getElementById('inProduct'); if (a) a.innerHTML = ph + opts;
-  const b = document.getElementById('outProduct'); if (b) b.innerHTML = ph + opts;
-}
-function updateCategoryList() {
-  const cats = [...new Set(products.map(p => p.category).filter(Boolean))];
-  const cl = document.getElementById('catList'); if (cl) cl.innerHTML = cats.map(c => `<option value="${c}">`).join('');
-}
-function updateBarcodeSelect() {
-  const sel = document.getElementById('bcProduct'); if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = `<option value="">-- اختر --</option>` + products.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
-  if (cur) sel.value = cur;
-}
-function updateInvoiceProductSelect() {
-  const sel = document.getElementById('invProductSelect'); if (!sel) return;
-  sel.innerHTML = `<option value="">-- اختر --</option>` + products.map(p => `<option value="${p.id}">${p.name} (${p.quantity})</option>`).join('');
-}
-
-function openAddModal() {
-  document.getElementById('modalTitle').textContent = 'إضافة منتج';
-  document.getElementById('editId').value = '';
-  document.getElementById('mName').value = '';
-  document.getElementById('mCategory').value = '';
-  document.getElementById('mQty').value = 0;
-  document.getElementById('mMin').value = 5;
-  document.getElementById('mPrice').value = 0;
-  document.getElementById('mBarcode').value = '';
-  const d = document.getElementById('deleteInModal'); if (d) d.remove();
-  document.getElementById('productModal').classList.add('active');
-}
-function openEditModal(id) {
-  const p = products.find(x => x.id === id); if (!p) return;
-  document.getElementById('modalTitle').textContent = 'تعديل';
-  document.getElementById('editId').value = p.id;
-  document.getElementById('mName').value = p.name;
-  document.getElementById('mCategory').value = p.category || '';
-  document.getElementById('mQty').value = p.quantity;
-  document.getElementById('mMin').value = p.minQuantity;
-  document.getElementById('mPrice').value = p.price || 0;
-  document.getElementById('mBarcode').value = p.barcode || '';
-  const btns = document.querySelector('#productModal .btn-group');
-  let del = document.getElementById('deleteInModal');
-  if (!del) {
-    del = document.createElement('button');
-    del.id = 'deleteInModal'; del.className = 'btn btn-danger'; del.innerHTML = '🗑️ حذف';
-    del.onclick = () => { deleteProduct(p.id); closeModal('productModal'); };
-    btns.appendChild(del);
-  }
-  document.getElementById('productModal').classList.add('active');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
-  const d = document.getElementById('deleteInModal');
-  if (d && id === 'productModal') d.remove();
-}
-function saveProduct() {
-  const id = document.getElementById('editId').value;
-  const name = document.getElementById('mName').value.trim();
-  const category = document.getElementById('mCategory').value.trim();
-  const quantity = Number(document.getElementById('mQty').value) || 0;
-  const minQuantity = Number(document.getElementById('mMin').value) || 0;
-  const price = Number(document.getElementById('mPrice').value) || 0;
-  let barcode = document.getElementById('mBarcode').value.trim();
-  if (!name) return showToast('أدخل اسم المنتج', 'error');
-  if (!barcode) barcode = 'MS' + Date.now().toString().slice(-10);
-  if (id) {
-    const p = products.find(x => x.id == id);
-    if (p) Object.assign(p, { name, category, quantity, minQuantity, price, barcode });
-    showToast('تم التحديث ✅', 'success');
-  } else {
-    products.push({ id: Date.now(), name, category, quantity, minQuantity, price, barcode });
-    showToast('تمت الإضافة ✅', 'success');
-  }
-  save(); refreshAll(); closeModal('productModal');
-  checkLowStockNotify();
-}
-function deleteProduct(id) {
-  if (!confirm('هل أنت متأكد؟')) return;
-  products = products.filter(p => p.id !== id);
-  delete labelQuantities[id];
-  save(); refreshAll(); showToast('تم الحذف 🗑️', 'success');
-}
-function doStockIn() {
-  const id = Number(document.getElementById('inProduct').value);
-  const qty = Number(document.getElementById('inQty').value);
-  const note = document.getElementById('inNote').value.trim();
-  if (!id) return showToast('اختر منتجًا', 'error');
-  if (!qty || qty <= 0) return showToast('كمية غير صحيحة', 'error');
-  const p = products.find(x => x.id === id); if (!p) return;
-  p.quantity += qty;
-  movements.push({ date: new Date().toLocaleString(lang === 'ar' ? 'ar-DZ' : 'fr-FR'), productName: p.name, type: 'in', quantity: qty, note: note || 'إدخال' });
-  save(); refreshAll();
-  document.getElementById('inQty').value = '';
-  document.getElementById('inNote').value = '';
-  showToast('تم الإدخال', 'success'); goTo('page-home');
-}
-function doStockOut() {
-  const id = Number(document.getElementById('outProduct').value);
-  const qty = Number(document.getElementById('outQty').value);
-  const note = document.getElementById('outNote').value.trim();
-  if (!id) return showToast('اختر منتجًا', 'error');
-  if (!qty || qty <= 0) return showToast('كمية غير صحيحة', 'error');
-  const p = products.find(x => x.id === id); if (!p) return;
-  if (qty > p.quantity) return showToast('الكمية غير كافية!', 'error');
-  p.quantity -= qty;
-  movements.push({ date: new Date().toLocaleString(lang === 'ar' ? 'ar-DZ' : 'fr-FR'), productName: p.name, type: 'out', quantity: qty, note: note || 'إخراج' });
-  save(); refreshAll();
-  document.getElementById('outQty').value = '';
-  document.getElementById('outNote').value = '';
-  showToast('تم الإخراج', 'success'); goTo('page-home');
-  checkLowStockNotify();
-}
-
-function openExpenseModal() {
-  document.getElementById('eDesc').value = '';
-  document.getElementById('eAmount').value = '';
-  document.getElementById('eCat').value = 'general';
-  document.getElementById('eDate').value = new Date().toISOString().split('T')[0];
-  document.getElementById('eNote').value = '';
-  document.getElementById('expenseModal').classList.add('active');
-}
-function saveExpense() {
-  const description = document.getElementById('eDesc').value.trim();
-  const amount = Number(document.getElementById('eAmount').value);
-  const category = document.getElementById('eCat').value;
-  const date = document.getElementById('eDate').value;
-  const note = document.getElementById('eNote').value.trim();
-  if (!description) return showToast('أدخل الوصف', 'error');
-  if (!amount || amount <= 0) return showToast('مبلغ غير صحيح', 'error');
-  expenses.push({ id: Date.now(), description, amount, category, date, note });
-  save(); renderExpenses(); renderStats(); closeModal('expenseModal');
-  showToast('تمت الإضافة ✅', 'success');
-}
-function deleteExpense(id) {
-  if (!confirm('هل أنت متأكد؟')) return;
-  expenses = expenses.filter(e => e.id !== id);
-  save(); renderExpenses(); renderStats();
-  showToast('تم الحذف 🗑️', 'success');
-}
-
-function addInvoiceItem() {
-  const id = Number(document.getElementById('invProductSelect').value);
-  if (!id) return showToast('اختر منتجًا', 'error');
-  const p = products.find(x => x.id === id); if (!p) return;
-  const existing = currentInvoiceItems.find(i => i.productId === id);
-  if (existing) existing.qty += 1;
-  else currentInvoiceItems.push({ productId: p.id, name: p.name, price: Number(p.price || 0), qty: 1 });
-  renderInvoiceItems(); renderInvoiceSummary();
-  document.getElementById('invProductSelect').value = '';
-}
-function renderInvoiceItems() {
-  const div = document.getElementById('invoiceItems'); if (!div) return;
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  if (currentInvoiceItems.length === 0) {
-    div.innerHTML = `<div class="empty-state" style="padding:20px 10px;"><p style="font-size:13px;">أضف منتجات</p></div>`;
-    return;
-  }
-  div.innerHTML = currentInvoiceItems.map((item, i) => `
-    <div class="invoice-item-row">
-      <div><div class="name">${item.name}</div><div class="price">${item.price} ${c}</div></div>
-      <input type="number" min="1" value="${item.qty}" onchange="updateInvoiceItemQty(${i}, this.value)">
-      <div class="total">${(item.price * item.qty).toFixed(2)}</div>
-      <button class="del" onclick="removeInvoiceItem(${i})">✕</button>
-    </div>
-  `).join('');
-}
-function updateInvoiceItemQty(index, value) {
-  const q = Number(value);
-  currentInvoiceItems[index].qty = q > 0 ? q : 1;
-  renderInvoiceItems(); renderInvoiceSummary();
-}
-function removeInvoiceItem(index) {
-  currentInvoiceItems.splice(index, 1);
-  renderInvoiceItems(); renderInvoiceSummary();
-}
-function renderInvoiceSummary() {
-  const subtotal = currentInvoiceItems.reduce((s, i) => s + (i.price * i.qty), 0);
-  const taxRate = Number(document.getElementById('invTax').value) || 0;
-  const discount = Number(document.getElementById('invDiscount').value) || 0;
-  const taxAmount = subtotal * taxRate / 100;
-  const total = subtotal + taxAmount - discount;
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  const e1 = document.getElementById('invSubtotal'); if (e1) e1.textContent = subtotal.toFixed(2) + ' ' + c;
-  const e2 = document.getElementById('invTaxAmount'); if (e2) e2.textContent = taxAmount.toFixed(2) + ' ' + c;
-  const e3 = document.getElementById('invDiscountAmount'); if (e3) e3.textContent = discount.toFixed(2) + ' ' + c;
-  const e4 = document.getElementById('invTotal'); if (e4) e4.textContent = total.toFixed(2) + ' ' + c;
-  return { subtotal, taxRate, taxAmount, discount, total };
-}
-function saveAndPrintInvoice(mode = 'a4') {
-  if (currentInvoiceItems.length === 0) return showToast('أضف منتجات أولاً', 'error');
-  const client = document.getElementById('invClient').value.trim() || '-';
-  const phone = document.getElementById('invPhone').value.trim();
-  const sums = renderInvoiceSummary();
-  for (const item of currentInvoiceItems) {
-    const p = products.find(x => x.id === item.productId);
-    if (p && item.qty > p.quantity) return showToast('الكمية غير كافية: ' + p.name, 'error');
-  }
-  const invoice = {
-    id: Date.now(),
-    number: 'INV-' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '-' + String(invoices.length + 1).padStart(3, '0'),
-    date: new Date().toLocaleString(lang === 'ar' ? 'ar-DZ' : 'fr-FR'),
-    dateOnly: new Date().toISOString().split('T')[0],
-    client, phone,
-    items: currentInvoiceItems.map(i => ({ ...i })),
-    subtotal: sums.subtotal, taxRate: sums.taxRate, taxAmount: sums.taxAmount,
-    discount: sums.discount, total: sums.total, lang: lang,
-    seller: isSeller ? 'seller' : 'owner'
-  };
-  for (const item of currentInvoiceItems) {
-    const p = products.find(x => x.id === item.productId);
-    if (p) {
-      p.quantity -= item.qty;
-      movements.push({ date: new Date().toLocaleString(lang === 'ar' ? 'ar-DZ' : 'fr-FR'), productName: p.name, type: 'out', quantity: item.qty, note: invoice.number });
-    }
-  }
-  invoices.push(invoice);
-  save(); refreshAll();
-  if (mode === 'thermal58') printThermalInvoice(invoice, 58);
-  else if (mode === 'thermal80') printThermalInvoice(invoice, 80);
-  else printInvoice(invoice);
-  showToast('تم حفظ الفاتورة ✅', 'success');
-  currentInvoiceItems = [];
-  document.getElementById('invClient').value = '';
-  document.getElementById('invPhone').value = '';
-  document.getElementById('invTax').value = 0;
-  document.getElementById('invDiscount').value = 0;
-  renderInvoiceItems(); renderInvoiceSummary();
-  checkLowStockNotify();
-}
-function printInvoice(invoice) {
-  const el = document.getElementById('printInvoice');
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
-  const itemsRows = invoice.items.map(i => `<tr><td>${i.name}</td><td>${i.price.toFixed(2)} ${c}</td><td>${i.qty}</td><td>${(i.price * i.qty).toFixed(2)} ${c}</td></tr>`).join('');
-  const taxRow = invoice.taxAmount > 0 ? `<div class="row"><span>الضريبة (${invoice.taxRate}%)</span><span>${invoice.taxAmount.toFixed(2)} ${c}</span></div>` : '';
-  const discountRow = invoice.discount > 0 ? `<div class="row"><span>الخصم</span><span>-${invoice.discount.toFixed(2)} ${c}</span></div>` : '';
-  el.innerHTML = `<div dir="${dir}" class="inv-a4">
-    <div class="inv-header">
-      <div class="company"><h1>📦 ${company.name || 'MonStock Pro'}</h1>
-        ${company.phone ? `<p>📞 ${company.phone}</p>` : ''}
-        ${company.address ? `<p>📍 ${company.address}</p>` : ''}
-      </div>
-      <div class="meta"><h2>فاتورة</h2>
-        <p><b>الرقم:</b> ${invoice.number}</p>
-        <p><b>التاريخ:</b> ${invoice.date}</p>
-      </div>
-    </div>
-    <div class="inv-client"><b>العميل:</b> ${invoice.client}${invoice.phone ? ' — 📞 ' + invoice.phone : ''}</div>
-    <table class="inv-table"><thead><tr><th>المنتج</th><th>السعر</th><th>الكمية</th><th>المجموع</th></tr></thead><tbody>${itemsRows}</tbody></table>
-    <div class="inv-totals">
-      <div class="row"><span>المجموع الفرعي</span><span>${invoice.subtotal.toFixed(2)} ${c}</span></div>
-      ${taxRow}${discountRow}
-      <div class="row total"><span>الإجمالي</span><span>${invoice.total.toFixed(2)} ${c}</span></div>
-    </div>
-    <div class="inv-thanks">شكرًا لتعاملكم معنا</div>
-    <div class="inv-footer">${company.name || 'MonStock Pro'}</div>
-  </div>`;
-  setTimeout(() => window.print(), 300);
-}
-function printThermalInvoice(invoice, width) {
-  const el = document.getElementById('printInvoice');
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
-  const fs = width === 58 ? '10px' : '12px';
-  const tfs = width === 58 ? '14px' : '16px';
-  const itemsRows = invoice.items.map(i => `<div style="display:flex;justify-content:space-between;font-size:${fs};margin:3px 0;"><span style="flex:1;">${i.name}</span><span style="margin:0 4px;">x${i.qty}</span><span>${(i.price * i.qty).toFixed(2)}</span></div>`).join('');
-  el.innerHTML = `<style>@page{size:${width}mm auto;margin:0;}</style>
-    <div dir="${dir}" style="font-family:'Courier New',monospace;padding:4mm 3mm;color:#000;width:${width}mm;box-sizing:border-box;">
-      <div style="text-align:center;font-weight:700;font-size:${tfs};margin-bottom:4px;">${company.name || 'MonStock Pro'}</div>
-      ${company.phone ? `<div style="text-align:center;font-size:${fs};">📞 ${company.phone}</div>` : ''}
-      <div style="text-align:center;font-size:${fs};margin:6px 0;">-------- فاتورة --------</div>
-      <div style="font-size:${fs};">الرقم: ${invoice.number}</div>
-      <div style="font-size:${fs};">التاريخ: ${invoice.date}</div>
-      <div style="font-size:${fs};">العميل: ${invoice.client}</div>
-      <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
-      ${itemsRows}
-      <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
-      <div style="display:flex;justify-content:space-between;font-weight:700;font-size:${tfs};border-top:2px solid #000;padding-top:4px;margin-top:6px;"><span>الإجمالي</span><span>${invoice.total.toFixed(2)} ${c}</span></div>
-      <div style="text-align:center;font-size:${fs};margin-top:10px;">شكرًا لتعاملكم معنا</div>
-    </div>`;
-  setTimeout(() => window.print(), 300);
-}
-function renderInvoices() {
-  const list = document.getElementById('invoicesList'); if (!list) return;
-  const c = lang === 'ar' ? 'دج' : 'DA';
-  if (invoices.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="emoji">🧾</div><p>لا توجد فواتير</p></div>`;
-    return;
-  }
-  list.innerHTML = [...invoices].reverse().slice(0, 50).map(inv => `
-    <div class="movement-item invoice" style="flex-wrap:wrap;">
-      <div class="m-icon">🧾</div>
-      <div class="m-info"><h4>${inv.number}</h4><span>${inv.client} • ${inv.date}</span></div>
-      <div class="m-qty">${Number(inv.total).toFixed(2)} ${c}</div>
-      <div style="display:flex; gap:6px; width:100%; margin-top:8px; flex-wrap:wrap;">
-        <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'a4')">🖨️ A4</button>
-        <button class="btn btn-warning" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal58')">🧾 58</button>
-        <button class="btn btn-info" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal80')">🧾 80</button>
-        <button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${inv.id})">🗑️</button>
-      </div>
-    </div>
-  `).join('');
-}
-function reprintInvoice(id, mode = 'a4') {
-  const inv = invoices.find(x => x.id === id);
-  if (!inv) return;
-  if (mode === 'thermal58') printThermalInvoice(inv, 58);
-  else if (mode === 'thermal80') printThermalInvoice(inv, 80);
-  else printInvoice(inv);
-}
-function deleteInvoice(id) {
-  if (!confirm('هل أنت متأكد؟')) return;
-  invoices = invoices.filter(x => x.id !== id);
-  save(); renderInvoices(); renderStats(); renderTodayStats();
-  showToast('تم الحذف 🗑️', 'success');
-}
-
+/* ==================== COMPANY ==================== */
 function saveCompany() {
   company.name = document.getElementById('sCompany').value.trim();
   company.phone = document.getElementById('sPhone').value.trim();
   company.address = document.getElementById('sAddress').value.trim();
-  save(); showToast('تم الحفظ ✅', 'success');
+  save(); showToast('✅', 'success');
 }
 function loadCompany() {
   const c = document.getElementById('sCompany'); if (c) c.value = company.name || '';
@@ -1682,11 +2028,12 @@ function loadCompany() {
   const a = document.getElementById('sAddress'); if (a) a.value = company.address || '';
 }
 
+/* ==================== BARCODE ==================== */
 function generateBarcode() {
   const pid = document.getElementById('bcProduct').value;
   const fmt = document.getElementById('bcFormat').value;
   if (!pid) {
-    document.getElementById('barcodePreview').innerHTML = `<p style="color:var(--text3);padding:20px;">اختر منتجًا</p>`;
+    document.getElementById('barcodePreview').innerHTML = `<p style="color:var(--text3);padding:20px;">${t('selectProduct')}</p>`;
     return;
   }
   const p = products.find(x => x.id == pid); if (!p) return;
@@ -1702,7 +2049,7 @@ function generateBarcode() {
     preview.innerHTML = ''; preview.appendChild(svg);
     JsBarcode(svg, value, { format: fmt, lineColor: '#000', width: 2, height: 80, displayValue: true, fontSize: 14, margin: 8 });
   } catch (e) {
-    document.getElementById('barcodePreview').innerHTML = `<p style="color:#dc3545;padding:20px;">قيمة غير صالحة</p>`;
+    document.getElementById('barcodePreview').innerHTML = `<p style="color:#dc3545;padding:20px;">❌</p>`;
   }
 }
 async function startScanner() {
@@ -1711,22 +2058,22 @@ async function startScanner() {
   if (isScanning) {
     try { await html5QrCode.stop(); html5QrCode.clear(); } catch(e){}
     isScanning = false; area.style.display = 'none';
-    btn.innerHTML = '📷 <span>بدء القراءة</span>'; return;
+    btn.innerHTML = '📷 <span>' + t('startScan') + '</span>'; return;
   }
   area.style.display = 'block';
   area.innerHTML = '<div id="reader"></div>';
-  btn.innerHTML = '⏹️ <span>إيقاف</span>';
+  btn.innerHTML = '⏹️ <span>' + t('startScan') + '</span>';
   html5QrCode = new Html5Qrcode("reader");
   try {
     await html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 260, height: 160 } },
       (txt) => {
         onScanSuccess(txt);
-        html5QrCode.stop().then(() => { area.style.display='none'; isScanning=false; btn.innerHTML='📷 <span>بدء القراءة</span>'; });
+        html5QrCode.stop().then(() => { area.style.display='none'; isScanning=false; btn.innerHTML='📷 <span>'+t('startScan')+'</span>'; });
       }, () => {});
     isScanning = true;
   } catch (err) {
-    showToast('لا يمكن الوصول للكاميرا', 'error'); area.style.display = 'none';
-    btn.innerHTML = '📷 <span>بدء القراءة</span>';
+    showToast('❌', 'error'); area.style.display = 'none';
+    btn.innerHTML = '📷 <span>' + t('startScan') + '</span>';
   }
 }
 function onScanSuccess(code) {
@@ -1741,7 +2088,7 @@ function onScanSuccess(code) {
     document.getElementById('bcValue').value = p.barcode;
     generateBarcode();
   } else {
-    res.innerHTML = `<p style="color:var(--err);font-weight:600;text-align:center;">لا يوجد منتج: ${code}</p>`;
+    res.innerHTML = `<p style="color:var(--err);font-weight:600;text-align:center;">❌ ${code}</p>`;
   }
 }
 function quickScan(mode='barcode') {
@@ -1757,7 +2104,7 @@ async function startMiniScanner() {
     miniScanner = new Html5Qrcode("miniReader");
     await miniScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 260, height: 160 } },
       (txt) => { handleQuickScanResult(txt); }, () => {});
-  } catch (e) { showToast('لا يمكن الوصول للكاميرا', 'error'); closeScannerModal(); }
+  } catch (e) { showToast('❌', 'error'); closeScannerModal(); }
 }
 async function stopMiniScanner() {
   if (miniScanner) { try { await miniScanner.stop(); miniScanner.clear(); } catch(e){} miniScanner = null; }
@@ -1770,18 +2117,19 @@ function handleQuickScanResult(code) {
   stopMiniScanner();
   document.getElementById('scannerModal').classList.remove('active');
   const p = products.find(x => x.barcode === code);
-  if (scanMode === 'product') { document.getElementById('mBarcode').value = code; showToast('تم: ' + code, 'success'); return; }
-  if (scanMode === 'in') { if (!p) return showToast('لا يوجد منتج', 'error'); document.getElementById('inProduct').value = p.id; showToast('تم: ' + p.name, 'success'); return; }
-  if (scanMode === 'out') { if (!p) return showToast('لا يوجد منتج', 'error'); document.getElementById('outProduct').value = p.id; showToast('تم: ' + p.name, 'success'); return; }
-  if (p) { goTo('page-barcode'); document.getElementById('bcProduct').value = p.id; document.getElementById('bcValue').value = p.barcode; generateBarcode(); showToast('تم: ' + p.name, 'success'); }
-  else { showToast('لا يوجد منتج', 'error'); }
+  if (scanMode === 'product') { document.getElementById('mBarcode').value = code; showToast('✅', 'success'); return; }
+  if (scanMode === 'in') { if (!p) return showToast('❌', 'error'); document.getElementById('inProduct').value = p.id; return; }
+  if (scanMode === 'out') { if (!p) return showToast('❌', 'error'); document.getElementById('outProduct').value = p.id; return; }
+  if (scanMode === 'invoice') { if (!p) return showToast('❌', 'error'); addToCart(p.id); showToast('✅ ' + p.name, 'success'); return; }
+  if (p) { goTo('page-barcode'); document.getElementById('bcProduct').value = p.id; document.getElementById('bcValue').value = p.barcode; generateBarcode(); }
 }
 
+/* ==================== LABELS ==================== */
 function renderLabelsProductList() {
   const div = document.getElementById('labelsProductList'); if (!div) return;
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   if (products.length === 0) {
-    div.innerHTML = '<p style="text-align:center;color:var(--text3);padding:20px;font-size:13px;">لا توجد منتجات</p>';
+    div.innerHTML = `<p style="text-align:center;color:var(--text3);padding:20px;font-size:13px;">${t('noProducts')}</p>`;
     return;
   }
   div.innerHTML = products.map(p => {
@@ -1814,14 +2162,14 @@ function printLabels() {
   const showPrice = document.getElementById('lblShowPrice').checked;
   const barcodeFormat = document.getElementById('lblBarcodeFormat').value;
   const allLabels = buildLabelsFromQuantities();
-  if (allLabels.length === 0) return showToast('حدد كمية', 'error');
+  if (allLabels.length === 0) return showToast('❌', 'error');
   const printArea = document.getElementById('printLabels');
   printArea.innerHTML = '';
   const sheet = document.createElement('div');
   sheet.className = 'print-label-sheet';
   const cols = w <= 35 ? 5 : (w <= 45 ? 4 : (w <= 55 ? 3 : 2));
   sheet.style.gridTemplateColumns = `repeat(${cols}, ${w}mm)`;
-  const c = lang === 'ar' ? 'دج' : 'DA';
+  const c = t('currency');
   allLabels.forEach(p => {
     const lbl = document.createElement('div');
     lbl.className = 'print-label';
@@ -1849,18 +2197,19 @@ function printLabels() {
     sheet.appendChild(lbl);
   });
   printArea.appendChild(sheet);
-  showToast(`طباعة ${allLabels.length} ملصق`, 'success');
+  showToast(`🖨️ ${allLabels.length}`, 'success');
   setTimeout(() => window.print(), 300);
 }
 
+/* ==================== EXPORT / IMPORT ==================== */
 function exportData() {
-  const data = { version: '7.0', exportDate: new Date().toISOString(), products, movements, expenses, invoices, company };
+  const data = { version: '8.0', exportDate: new Date().toISOString(), products, movements, expenses, invoices, company };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = `monstock-${new Date().toISOString().split('T')[0]}.json`;
   a.click(); URL.revokeObjectURL(url);
-  showToast('تم التصدير 💾', 'success');
+  showToast('💾', 'success');
 }
 document.getElementById('importFile').addEventListener('change', e => {
   const file = e.target.files[0]; if (!file) return;
@@ -1875,19 +2224,20 @@ document.getElementById('importFile').addEventListener('change', e => {
       invoices = Array.isArray(data.invoices) ? data.invoices : [];
       company = data.company || company;
       save(); refreshAll(); loadCompany();
-      showToast('تم الاستيراد ✅', 'success');
-    } catch { showToast('الملف غير صالح', 'error'); }
+      showToast('✅', 'success');
+    } catch { showToast('❌', 'error'); }
     e.target.value = '';
   };
   reader.readAsText(file);
 });
 function clearAll() {
-  if (!confirm('سيتم مسح كل البيانات! متأكد؟')) return;
-  if (!confirm('تأكيد أخير؟')) return;
+  if (!confirm('?')) return;
+  if (!confirm('??')) return;
   products = []; movements = []; expenses = []; invoices = [];
-  save(); refreshAll(); showToast('تم المسح 🗑️', 'success');
+  save(); refreshAll(); showToast('🗑️', 'success');
 }
 
+/* ==================== UTILS ==================== */
 function showToast(msg, type = '') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
@@ -1895,8 +2245,8 @@ function showToast(msg, type = '') {
   setTimeout(() => toast.className = 'toast ' + type, 2500);
 }
 function goTo(pageId) {
-  if (isSeller && (pageId === 'page-reports' || pageId === 'page-settings')) {
-    pageId = 'page-home';
+  if (isSeller && ['page-reports','page-settings','page-expenses','page-stats'].includes(pageId)) {
+    pageId = 'page-invoice';
   }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
@@ -1906,12 +2256,13 @@ function goTo(pageId) {
   if (pageId === 'page-stats') renderStats();
   if (pageId === 'page-products') renderProducts();
   if (pageId === 'page-expenses') renderExpenses();
-  if (pageId === 'page-invoice') { updateInvoiceProductSelect(); renderInvoiceItems(); renderInvoiceSummary(); renderInvoices(); }
+  if (pageId === 'page-invoice') { updateInvoiceProductSelect(); renderInvoiceItems(); renderInvoiceSummary(); renderInvoices(); renderSellGrid(); updateHeroTotal(); }
   if (pageId === 'page-barcode') { updateBarcodeSelect(); generateBarcode(); renderLabelsProductList(); }
   if (pageId === 'page-settings') { loadCompany(); loadSellerPinToSettings(); }
   if (pageId === 'page-reports') generateReport();
 }
 
+/* ==================== EVENTS ==================== */
 document.getElementById('searchInput').addEventListener('input', renderProducts);
 document.getElementById('langBtn').addEventListener('click', changeLang);
 document.querySelectorAll('.modal-overlay').forEach(ov => {
@@ -1930,10 +2281,12 @@ document.getElementById('loginPass').addEventListener('keypress', e => { if (e.k
 document.getElementById('registerPass2').addEventListener('keypress', e => { if (e.key === 'Enter') doRegister(); });
 document.getElementById('sellerPin').addEventListener('keypress', e => { if (e.key === 'Enter') doSellerLogin(); });
 
+/* ==================== INIT ==================== */
 loadLocal();
 applyDarkMode();
-applyLanguage();
 if (localStorage.getItem('notif') === '1') notifEnabled = true;
+const lbtn = document.getElementById('langBtn'); if (lbtn) lbtn.textContent = lang === 'ar' ? 'FR' : 'ع';
+translateAll();
 
 const defRange = getDefaultRange();
 const rf = document.getElementById('reportFrom'); if (rf) rf.value = defRange.from;
@@ -1948,8 +2301,8 @@ if (localStorage.getItem('monstock_is_seller') === '1') {
 
 setTimeout(() => {
   if (!fbReady && !isSeller) {
-    showAuthError('loginError', '⚠️ جارٍ الاتصال... تحقق من الإنترنت');
-    showAuthError('registerError', '⚠️ جارٍ الاتصال... تحقق من الإنترنت');
+    showAuthError('loginError', '⚠️ Connexion... Vérifiez Internet');
+    showAuthError('registerError', '⚠️ Connexion... Vérifiez Internet');
   }
 }, 5000);
 </script>
@@ -1958,8 +2311,8 @@ setTimeout(() => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
-      .catch(err => console.log('❌ Service Worker error:', err));
+      .then(reg => console.log('✅ SW:', reg.scope))
+      .catch(err => console.log('❌ SW:', err));
   });
 }
 </script>
