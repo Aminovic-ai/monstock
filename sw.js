@@ -1,8 +1,8 @@
-const CACHE_NAME = 'monstock-v1';
+const CACHE_NAME = 'monstock-v2';
 
 const urlsToCache = [
   './',
-  './index.html',
+  './monstock.html',
   './manifest.json',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js',
