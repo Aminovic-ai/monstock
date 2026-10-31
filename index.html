@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MonStock">
+<!-- تمت إضافة أيقونة الآيفون هنا -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%234f46e5'/><text x='50%' y='50%' font-size='300' text-anchor='middle' dominant-baseline='central'>📦</text></svg>">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📦</text></svg>">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
@@ -505,119 +507,117 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
         <div class="form-group"><label data-tr="noteOpt">ملاحظة (اختياري)</label><input type="text" class="form-control" id="outNote"></div>
         <button class="btn btn-warning" onclick="doStockOut()">✅ <span data-tr="confirm">تأكيد</span></button>
       </div>
-    </div>
-
+              </div>
     <!-- ============ MODERN SELLING PAGE ============ -->
-    <div class="page" id="page-invoice">
-      
-      <!-- Big total hero card -->
-      <div class="sell-hero">
-        <div class="label" data-tr="totalToPay">المجموع الإجمالي</div>
-        <div class="big-total">
-          <span id="heroTotal">0.00</span>
-          <span class="currency" id="heroCurrency">دج</span>
-        </div>
-        <div class="sub-info">
-          <span>🧾 <span id="heroItems">0</span> <span data-tr="items">عنصر</span></span>
-          <span>📦 <span id="heroQty">0</span> <span data-tr="pieces">قطعة</span></span>
-        </div>
-      </div>
-
-      <!-- Client inputs (collapsible) -->
-      <div class="extras-toggle" onclick="toggleExtras()">
-        <span id="extrasToggleText">➕ <span data-tr="addClientAndTax">إضافة عميل / ضريبة / خصم</span></span>
-      </div>
-      <div class="extras-section" id="extrasSection">
-        <div class="card" style="padding:14px;">
-          <div class="client-input-row" style="margin-bottom:10px;">
-            <input type="text" id="invClient" placeholder="👤 اسم العميل">
-            <input type="text" id="invPhone" placeholder="📞 الهاتف">
-          </div>
-          <div class="client-input-row">
-            <input type="number" id="invTax" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الضريبة %">
-            <input type="number" id="invDiscount" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الخصم">
-          </div>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
-              <span data-tr="subtotal">المجموع الفرعي</span><span id="invSubtotal">0</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
-              <span data-tr="tax">الضريبة</span><span id="invTaxAmount">0</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
-              <span data-tr="discount">الخصم</span><span id="invDiscountAmount">0</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick product search + scan -->
-      <div class="sell-search-row" style="margin-top:16px;">
-        <input type="text" id="sellSearch" placeholder="🔍 ابحث واضغط لإضافة" oninput="renderSellGrid()">
-        <button onclick="quickScan('invoice')" title="قراءة بالكاميرا">📷</button>
-      </div>
-
-      <!-- Product grid for quick add -->
-      <div class="sell-product-grid" id="sellProductGrid"></div>
-
-      <!-- Cart -->
-      <div class="section-title"><span>🛒</span><span data-tr="cart">السلة</span> <span style="background:var(--p);color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;" id="cartCount">0</span></div>
-      <div id="invoiceItems"></div>
-
-      <!-- Payment buttons -->
-      <div class="pay-grid">
-        <button class="pay-btn a4" onclick="saveAndPrintInvoice('a4')">
-          <span class="pay-icon">🖨️</span>
-          <span data-tr="printA4">A4</span>
-        </button>
-        <button class="pay-btn t58" onclick="saveAndPrintInvoice('thermal58')">
-          <span class="pay-icon">🧾</span>
-          <span data-tr="print58">58mm</span>
-        </button>
-        <button class="pay-btn t80" onclick="saveAndPrintInvoice('thermal80')">
-          <span class="pay-icon">🧾</span>
-          <span data-tr="print80">80mm</span>
-        </button>
-      </div>
-
-      <button class="btn btn-outline" onclick="resetInvoice()" style="margin-top:10px;">🔄 <span data-tr="newSale">بيع جديد</span></button>
-
-      <div class="section-title" style="margin-top:24px;"><span>📋</span><span data-tr="recentInvoices">آخر الفواتير</span></div>
-      <div id="invoicesList"></div>
+<div class="page" id="page-invoice">
+  
+  <!-- Big total hero card -->
+  <div class="sell-hero">
+    <div class="label" data-tr="totalToPay">المجموع الإجمالي</div>
+    <div class="big-total">
+      <span id="heroTotal">0.00</span>
+      <span class="currency" id="heroCurrency">دج</span>
     </div>
-
-    <!-- REPORTS -->
-    <div class="page" id="page-reports">
-      <div class="section-title"><span>📈</span><span data-tr="reportsTitle">التقارير المفصلة</span></div>
-      <div class="card">
-        <h3 class="card-title">📅 <span data-tr="choosePeriod">اختر الفترة</span></h3>
-        <div class="form-row">
-          <div class="form-group"><label data-tr="from">من</label><input type="date" class="form-control" id="reportFrom"></div>
-          <div class="form-group"><label data-tr="to">إلى</label><input type="date" class="form-control" id="reportTo"></div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
-          <button class="btn btn-outline" onclick="setRange('today')" style="padding:8px;font-size:12px;" data-tr="todayBtn">اليوم</button>
-          <button class="btn btn-outline" onclick="setRange('week')" style="padding:8px;font-size:12px;" data-tr="weekBtn">الأسبوع</button>
-          <button class="btn btn-outline" onclick="setRange('month')" style="padding:8px;font-size:12px;" data-tr="monthBtn">الشهر</button>
-          <button class="btn btn-outline" onclick="setRange('year')" style="padding:8px;font-size:12px;" data-tr="yearBtn">السنة</button>
-        </div>
-        <button class="btn btn-primary" onclick="generateReport()">📊 <span data-tr="apply">تطبيق</span></button>
-      </div>
-      <div id="reportContent"></div>
+    <div class="sub-info">
+      <span>🧾 <span id="heroItems">0</span> <span data-tr="items">عنصر</span></span>
+      <span>📦 <span id="heroQty">0</span> <span data-tr="pieces">قطعة</span></span>
     </div>
+  </div>
 
-    <!-- EXPENSES -->
-    <div class="page" id="page-expenses">
-      <div class="section-title"><span>💸</span><span data-tr="expensesTitle">المصروفات</span></div>
-      <div class="card" style="background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;">
-        <div style="font-size:12px;opacity:.9;" data-tr="totalExpenses">إجمالي المصروفات</div>
-        <div style="font-size:26px;font-weight:700;margin-top:6px;" id="expTotal">0</div>
+  <!-- Client inputs (collapsible) -->
+  <div class="extras-toggle" onclick="toggleExtras()">
+    <span id="extrasToggleText">➕ <span data-tr="addClientAndTax">إضافة عميل / ضريبة / خصم</span></span>
+  </div>
+  <div class="extras-section" id="extrasSection">
+    <div class="card" style="padding:14px;">
+      <div class="client-input-row" style="margin-bottom:10px;">
+        <input type="text" id="invClient" placeholder="👤 اسم العميل">
+        <input type="text" id="invPhone" placeholder="📞 الهاتف">
       </div>
-      <button class="btn btn-primary" onclick="openExpenseModal()" style="margin-bottom:14px;">➕ <span data-tr="addExpense">إضافة مصروف</span></button>
-      <div class="section-title"><span>📋</span><span data-tr="expensesList">قائمة المصروفات</span></div>
-      <div id="expensesList"></div>
+      <div class="client-input-row">
+        <input type="number" id="invTax" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الضريبة %">
+        <input type="number" id="invDiscount" value="0" min="0" oninput="renderInvoiceSummary()" placeholder="الخصم">
+      </div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);">
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+          <span data-tr="subtotal">المجموع الفرعي</span><span id="invSubtotal">0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+          <span data-tr="tax">الضريبة</span><span id="invTaxAmount">0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;color:var(--text2);">
+          <span data-tr="discount">الخصم</span><span id="invDiscountAmount">0</span>
+        </div>
+      </div>
     </div>
+  </div>
 
+  <!-- Quick product search + scan -->
+  <div class="sell-search-row" style="margin-top:16px;">
+    <input type="text" id="sellSearch" placeholder="🔍 ابحث واضغط لإضافة" oninput="renderSellGrid()">
+    <button onclick="quickScan('invoice')" title="قراءة بالكاميرا">📷</button>
+  </div>
+
+  <!-- Product grid for quick add -->
+  <div class="sell-product-grid" id="sellProductGrid"></div>
+
+  <!-- Cart -->
+  <div class="section-title"><span>🛒</span><span data-tr="cart">السلة</span> <span style="background:var(--p);color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;" id="cartCount">0</span></div>
+  <div id="invoiceItems"></div>
+
+  <!-- Payment buttons -->
+  <div class="pay-grid">
+    <button class="pay-btn a4" onclick="saveAndPrintInvoice('a4')">
+      <span class="pay-icon">🖨️</span>
+      <span data-tr="printA4">A4</span>
+    </button>
+    <button class="pay-btn t58" onclick="saveAndPrintInvoice('thermal58')">
+      <span class="pay-icon">🧾</span>
+      <span data-tr="print58">58mm</span>
+    </button>
+    <button class="pay-btn t80" onclick="saveAndPrintInvoice('thermal80')">
+      <span class="pay-icon">🧾</span>
+      <span data-tr="print80">80mm</span>
+    </button>
+  </div>
+
+  <button class="btn btn-outline" onclick="resetInvoice()" style="margin-top:10px;">🔄 <span data-tr="newSale">بيع جديد</span></button>
+
+  <div class="section-title" style="margin-top:24px;"><span>📋</span><span data-tr="recentInvoices">آخر الفواتير</span></div>
+  <div id="invoicesList"></div>
+</div>
+
+<!-- REPORTS -->
+<div class="page" id="page-reports">
+  <div class="section-title"><span>📈</span><span data-tr="reportsTitle">التقارير المفصلة</span></div>
+  <div class="card">
+    <h3 class="card-title">📅 <span data-tr="choosePeriod">اختر الفترة</span></h3>
+    <div class="form-row">
+      <div class="form-group"><label data-tr="from">من</label><input type="date" class="form-control" id="reportFrom"></div>
+      <div class="form-group"><label data-tr="to">إلى</label><input type="date" class="form-control" id="reportTo"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;">
+      <button class="btn btn-outline" onclick="setRange('today')" style="padding:8px;font-size:12px;" data-tr="todayBtn">اليوم</button>
+      <button class="btn btn-outline" onclick="setRange('week')" style="padding:8px;font-size:12px;" data-tr="weekBtn">الأسبوع</button>
+      <button class="btn btn-outline" onclick="setRange('month')" style="padding:8px;font-size:12px;" data-tr="monthBtn">الشهر</button>
+      <button class="btn btn-outline" onclick="setRange('year')" style="padding:8px;font-size:12px;" data-tr="yearBtn">السنة</button>
+    </div>
+    <button class="btn btn-primary" onclick="generateReport()">📊 <span data-tr="apply">تطبيق</span></button>
+  </div>
+  <div id="reportContent"></div>
+</div>
+
+<!-- EXPENSES -->
+<div class="page" id="page-expenses">
+  <div class="section-title"><span>💸</span><span data-tr="expensesTitle">المصروفات</span></div>
+  <div class="card" style="background:linear-gradient(135deg,#ec4899,#f43f5e);color:#fff;">
+    <div style="font-size:12px;opacity:.9;" data-tr="totalExpenses">إجمالي المصروفات</div>
+    <div style="font-size:26px;font-weight:700;margin-top:6px;" id="expTotal">0</div>
+  </div>
+  <button class="btn btn-primary" onclick="openExpenseModal()" style="margin-bottom:14px;">➕ <span data-tr="addExpense">إضافة مصروف</span></button>
+  <div class="section-title"><span>📋</span><span data-tr="expensesList">قائمة المصروفات</span></div>
+  <div id="expensesList"></div>
+</div>
     <!-- BARCODE -->
     <div class="page" id="page-barcode">
       <div class="section-title"><span>🏷️</span><span data-tr="barcodeTitle">الباركود والملصقات</span></div>
@@ -837,7 +837,6 @@ body.seller-mode .header{background:linear-gradient(135deg,#f59e0b,#d97706)}
 
 <div id="printInvoice"></div>
 <div id="printLabels"></div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
@@ -1002,17 +1001,14 @@ function translateAll() {
     if (val) el.textContent = val;
   });
 
-  // Currency displays
   const heroCurrency = document.getElementById('heroCurrency');
   if (heroCurrency) heroCurrency.textContent = t('currency');
 
-  // Translate select options for expense category
   document.querySelectorAll('#eCat option[data-tr]').forEach(opt => {
     const val = t(opt.dataset.tr);
     if (val) opt.textContent = val;
   });
 
-  // Translate placeholders
   const si = document.getElementById('searchInput');
   if (si) si.placeholder = '🔍 ' + t('searchProduct');
   const ss = document.getElementById('sellSearch');
@@ -1178,8 +1174,7 @@ function loadLocal() {
   } catch (e) {}
 }
 function save() { saveLocal(); scheduleSync(); }
-
-/* ==================== AUTH ==================== */
+  /* ==================== AUTH ==================== */
 function showAuthScreen() {
   document.getElementById('authScreen').classList.remove('hidden');
   document.getElementById('app').style.display = 'none';
@@ -1367,9 +1362,8 @@ async function saveSellerPin() {
 function loadSellerPinToSettings() {
   const pin = localStorage.getItem('monstock_seller_pin') || '';
   const el = document.getElementById('sSellerPin'); if (el) el.value = pin;
-}
-
-/* ==================== REFRESH ALL ==================== */
+  }
+  /* ==================== REFRESH ALL ==================== */
 function refreshAll() {
   renderProducts(); renderMovements(); renderExpenses(); renderStats();
   updateProductSelects(); updateCategoryList(); updateBarcodeSelect();
@@ -1662,9 +1656,8 @@ function doStockOut() {
   document.getElementById('outNote').value = '';
   showToast('✅', 'success'); goTo('page-home');
   checkLowStockNotify();
-}
-
-/* ==================== EXPENSES ==================== */
+  }
+  /* ==================== EXPENSES ==================== */
 function openExpenseModal() {
   document.getElementById('eDesc').value = '';
   document.getElementById('eAmount').value = '';
@@ -2013,9 +2006,8 @@ function generateReport() {
     </div>
     <button class="btn btn-purple" onclick="window.print()">🖨️ ${t('printBtn')}</button>
   `;
-}
-
-/* ==================== COMPANY ==================== */
+  }
+  /* ==================== COMPANY ==================== */
 function saveCompany() {
   company.name = document.getElementById('sCompany').value.trim();
   company.phone = document.getElementById('sPhone').value.trim();
