@@ -1,8 +1,8 @@
-const CACHE_NAME = 'monstock-v2';
+const CACHE_NAME = 'monstock-v3'; // تم رفع الإصدار لإجبار المتصفح على التحديث
 
 const urlsToCache = [
   './',
-  './monstock.html',
+  './index.html', // تم تصحيح الاسم هنا
   './manifest.json',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js',
   'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js',
