@@ -1,4 +1,4 @@
-const CACHE_NAME = 'monstock-v4'; // تم رفع الإصدار لإجبار المتصفح على التحديث
+const CACHE_NAME = 'monstock-v5'; // تم رفع الإصدار لإجبار المتصفح على التحديث
 
 const urlsToCache = [
   './',
