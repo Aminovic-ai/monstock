@@ -1506,7 +1506,7 @@ function renderProducts() {
         <span>💰 ${p.price || 0} ${c}</span>
       </div></div>
       <div class="qty"><div class="num ${low ? 'low-num' : ''}">${p.quantity}</div><div class="unit">/ ${p.minQuantity}</div></div>
-      <button class="menu-btn" onclick="openEditModal(${p.id})">⋯</button>
+      <button class="menu-btn" onclick="openEditModal(${Number(p.id)})">⋯</button>
     </div>`;
   }).join('');
 }
@@ -1538,7 +1538,7 @@ function renderExpenses() {
       <div class="m-icon">💸</div>
       <div class="m-info"><h4>${escapeHTML(e.description)}</h4><span>${escapeHTML(e.date)}</span></div>
       <div class="m-qty">-${Number(e.amount).toFixed(2)}</div>
-      <button class="menu-btn" onclick="deleteExpense(${e.id})" style="color:var(--err);">🗑️</button>
+      <button class="menu-btn" onclick="deleteExpense(${Number(e.id)})" style="color:var(--err);">🗑️</button>
     </div>
   `).join('');
 }
@@ -1559,7 +1559,7 @@ function renderSellGrid() {
   grid.innerHTML = filtered.map(p => {
     const out = p.quantity <= 0;
     const emoji = p.category ? '📁' : '📦';
-    return `<div class="sell-prod-card ${out ? 'low-stock' : ''}" onclick="${out ? '' : `addToCart(${p.id})`}">
+    return `<div class="sell-prod-card ${out ? 'low-stock' : ''}" onclick="${out ? '' : `addToCart(${Number(p.id)})`}">
       <div class="p-emoji">${emoji}</div>
       <div class="p-name">${escapeHTML(p.name)}</div>
       <div class="p-price">${p.price || 0} ${c}</div>
@@ -1600,7 +1600,7 @@ function toggleExtras() {
 
 /* ==================== SELECTS ==================== */
 function updateProductSelects() {
-  const opts = products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
+  const opts = products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
   const ph = `<option value="">-- ${t('selectProduct')} --</option>`;
   const a = document.getElementById('inProduct'); if (a) a.innerHTML = ph + opts;
   const b = document.getElementById('outProduct'); if (b) b.innerHTML = ph + opts;
@@ -1612,12 +1612,12 @@ function updateCategoryList() {
 function updateBarcodeSelect() {
   const sel = document.getElementById('bcProduct'); if (!sel) return;
   const cur = sel.value;
-  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${p.id}">${escapeHTML(p.name)}</option>`).join('');
+  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)}</option>`).join('');
   if (cur) sel.value = cur;
 }
 function updateInvoiceProductSelect() {
   const sel = document.getElementById('invProductSelect'); if (!sel) return;
-  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${p.id}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
+  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
 }
 
 /* ==================== PRODUCT CRUD ==================== */
@@ -1926,10 +1926,10 @@ function renderInvoices() {
       <div class="m-info"><h4>${escapeHTML(inv.number)}</h4><span>${escapeHTML(inv.client)} • ${escapeHTML(inv.date)}</span></div>
       <div class="m-qty">${Number(inv.total).toFixed(2)} ${c}</div>
       <div style="display:flex; gap:6px; width:100%; margin-top:8px; flex-wrap:wrap;">
-        <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'a4')">🖨️ A4</button>
-        <button class="btn btn-warning" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal58')">🧾 58</button>
-        <button class="btn btn-info" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal80')">🧾 80</button>
-        ${isSeller ? '' : `<button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${inv.id})" title="${lang === 'ar' ? 'إلغاء الفاتورة' : 'Annuler la facture'}">🗑️</button>`}
+        <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${Number(inv.id)},'a4')">🖨️ A4</button>
+        <button class="btn btn-warning" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${Number(inv.id)},'thermal58')">🧾 58</button>
+        <button class="btn btn-info" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${Number(inv.id)},'thermal80')">🧾 80</button>
+        ${isSeller ? '' : `<button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${Number(inv.id)})" title="${lang === 'ar' ? 'إلغاء الفاتورة' : 'Annuler la facture'}">🗑️</button>`}
       </div>
     </div>
   `).join('');
@@ -2226,7 +2226,7 @@ function renderLabelsProductList() {
         <div class="li-name">${escapeHTML(p.name)}</div>
         <div class="li-meta">💰 ${p.price || 0} ${c}</div>
       </div>
-      <input type="number" min="0" max="200" value="${qty}" oninput="setLabelQty(${p.id}, this.value)">
+      <input type="number" min="0" max="200" value="${qty}" oninput="setLabelQty(${Number(p.id)}, this.value)">
     </div>`;
   }).join('');
 }
