@@ -1481,7 +1481,7 @@ function renderStats() {
       <div class="product-item low">
         <div class="avatar">${escapeHTML(String(p.name || '').charAt(0).toUpperCase())}</div>
         <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta"><span>${escapeHTML(p.category || '-')}</span></div></div>
-        <div class="qty"><div class="num low-num">${p.quantity}</div><div class="unit">/ ${p.minQuantity}</div></div>
+        <div class="qty"><div class="num low-num">${escapeHTML(p.quantity)}</div><div class="unit">/ ${escapeHTML(p.minQuantity)}</div></div>
       </div>
     `).join('');
   }
@@ -1503,9 +1503,9 @@ function renderProducts() {
       <div class="avatar">${escapeHTML(String(p.name || '').charAt(0).toUpperCase())}</div>
       <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta">
         ${p.category ? `<span>📁 ${escapeHTML(p.category)}</span>` : ''}
-        <span>💰 ${p.price || 0} ${c}</span>
+        <span>💰 ${escapeHTML(p.price || 0)} ${c}</span>
       </div></div>
-      <div class="qty"><div class="num ${low ? 'low-num' : ''}">${p.quantity}</div><div class="unit">/ ${p.minQuantity}</div></div>
+      <div class="qty"><div class="num ${low ? 'low-num' : ''}">${escapeHTML(p.quantity)}</div><div class="unit">/ ${escapeHTML(p.minQuantity)}</div></div>
       <button class="menu-btn" onclick="openEditModal(${Number(p.id)})">⋯</button>
     </div>`;
   }).join('');
@@ -1520,7 +1520,7 @@ function renderMovements() {
     <div class="movement-item ${m.type === 'in' ? 'in' : 'out'}">
       <div class="m-icon">${m.type === 'in' ? '📥' : '📤'}</div>
       <div class="m-info"><h4>${escapeHTML(m.productName)}</h4><span>${escapeHTML(m.date)}${m.note ? ' • ' + escapeHTML(m.note) : ''}</span></div>
-      <div class="m-qty">${m.type === 'in' ? '+' : '-'}${m.quantity}</div>
+      <div class="m-qty">${m.type === 'in' ? '+' : '-'}${escapeHTML(m.quantity)}</div>
     </div>
   `).join('');
 }
@@ -1562,8 +1562,8 @@ function renderSellGrid() {
     return `<div class="sell-prod-card ${out ? 'low-stock' : ''}" onclick="${out ? '' : `addToCart(${Number(p.id)})`}">
       <div class="p-emoji">${emoji}</div>
       <div class="p-name">${escapeHTML(p.name)}</div>
-      <div class="p-price">${p.price || 0} ${c}</div>
-      <div class="p-stock">${p.quantity} ${t('pieces')}</div>
+      <div class="p-price">${escapeHTML(p.price || 0)} ${c}</div>
+      <div class="p-stock">${escapeHTML(p.quantity)} ${t('pieces')}</div>
     </div>`;
   }).join('');
 }
@@ -1600,7 +1600,7 @@ function toggleExtras() {
 
 /* ==================== SELECTS ==================== */
 function updateProductSelects() {
-  const opts = products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
+  const opts = products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${escapeHTML(p.quantity)})</option>`).join('');
   const ph = `<option value="">-- ${t('selectProduct')} --</option>`;
   const a = document.getElementById('inProduct'); if (a) a.innerHTML = ph + opts;
   const b = document.getElementById('outProduct'); if (b) b.innerHTML = ph + opts;
@@ -1617,7 +1617,7 @@ function updateBarcodeSelect() {
 }
 function updateInvoiceProductSelect() {
   const sel = document.getElementById('invProductSelect'); if (!sel) return;
-  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${p.quantity})</option>`).join('');
+  sel.innerHTML = `<option value="">-- ${t('selectProduct')} --</option>` + products.map(p => `<option value="${Number(p.id)}">${escapeHTML(p.name)} (${escapeHTML(p.quantity)})</option>`).join('');
 }
 
 /* ==================== PRODUCT CRUD ==================== */
@@ -1763,11 +1763,11 @@ function renderInvoiceItems() {
       <button class="ci-del" onclick="removeInvoiceItem(${i})">🗑️</button>
       <div class="ci-info">
         <div class="ci-name">${escapeHTML(item.name)}</div>
-        <div class="ci-price">${item.price} ${c}</div>
+        <div class="ci-price">${escapeHTML(item.price)} ${c}</div>
       </div>
       <div class="ci-qty">
         <button class="minus" onclick="updateInvoiceItemQty(${i}, ${item.qty - 1})">−</button>
-        <span class="num">${item.qty}</span>
+        <span class="num">${escapeHTML(item.qty)}</span>
         <button onclick="updateInvoiceItemQty(${i}, ${item.qty + 1})">+</button>
       </div>
       <div class="ci-total">${(item.price * item.qty).toFixed(2)}</div>
@@ -2169,7 +2169,7 @@ function onScanSuccess(code) {
   if (p) {
     res.innerHTML = `<div class="product-item" style="border:2px solid var(--ok);">
       <div class="avatar" style="background:#d1fae5;color:var(--ok);">✓</div>
-      <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta"><span>💰 ${p.price}</span><span>📦 ${p.quantity}</span></div></div>
+      <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta"><span>💰 ${p.price}</span><span>📦 ${escapeHTML(p.quantity)}</span></div></div>
     </div>`;
     document.getElementById('bcProduct').value = p.id;
     document.getElementById('bcValue').value = p.barcode;
@@ -2224,7 +2224,7 @@ function renderLabelsProductList() {
     return `<div class="label-item-row" style="${qty > 0 ? 'background:var(--pl);' : ''}">
       <div class="li-info">
         <div class="li-name">${escapeHTML(p.name)}</div>
-        <div class="li-meta">💰 ${p.price || 0} ${c}</div>
+        <div class="li-meta">💰 ${escapeHTML(p.price || 0)} ${c}</div>
       </div>
       <input type="number" min="0" max="200" value="${qty}" oninput="setLabelQty(${Number(p.id)}, this.value)">
     </div>`;
@@ -2276,10 +2276,10 @@ function printLabels() {
       try { JsBarcode(svg, bv, { format: 'CODE128', width: 1.2, height: 30, displayValue: false, margin: 0 }); } catch(e2) {}
     }
     let html = '';
-    if (showStore && company.name) html += `<div class="pl-store">${company.name}</div>`;
-    if (showName) html += `<div class="pl-name">${p.name}</div>`;
+    if (showStore && company.name) html += `<div class="pl-store">${escapeHTML(company.name)}</div>`;
+    if (showName) html += `<div class="pl-name">${escapeHTML(p.name)}</div>`;
     html += `<div class="pl-code">${svg.outerHTML}</div>`;
-    if (showPrice) html += `<div class="pl-price">${p.price || 0} ${c}</div>`;
+    if (showPrice) html += `<div class="pl-price">${escapeHTML(p.price || 0)} ${c}</div>`;
     lbl.innerHTML = html;
     sheet.appendChild(lbl);
   });
