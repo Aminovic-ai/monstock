@@ -1437,8 +1437,8 @@ function renderStats() {
   } else {
     lowDiv.innerHTML = lowList.map(p => `
       <div class="product-item low">
-        <div class="avatar">${p.name.charAt(0).toUpperCase()}</div>
-        <div class="info"><h4>${p.name}</h4><div class="meta"><span>${p.category || '-'}</span></div></div>
+        <div class="avatar">${escapeHTML(String(p.name || '').charAt(0).toUpperCase())}</div>
+        <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta"><span>${escapeHTML(p.category || '-')}</span></div></div>
         <div class="qty"><div class="num low-num">${p.quantity}</div><div class="unit">/ ${p.minQuantity}</div></div>
       </div>
     `).join('');
@@ -1459,8 +1459,8 @@ function renderProducts() {
     const low = p.quantity <= p.minQuantity;
     return `<div class="product-item ${low ? 'low' : ''}">
       <div class="avatar">${p.name.charAt(0).toUpperCase()}</div>
-      <div class="info"><h4>${p.name}</h4><div class="meta">
-        ${p.category ? `<span>📁 ${p.category}</span>` : ''}
+      <div class="info"><h4>${escapeHTML(p.name)}</h4><div class="meta">
+        ${p.category ? `<span>📁 ${escapeHTML(p.category)}</span>` : ''}
         <span>💰 ${p.price || 0} ${c}</span>
       </div></div>
       <div class="qty"><div class="num ${low ? 'low-num' : ''}">${p.quantity}</div><div class="unit">/ ${p.minQuantity}</div></div>
@@ -1475,9 +1475,9 @@ function renderMovements() {
     return;
   }
   list.innerHTML = [...movements].reverse().slice(0, 100).map(m => `
-    <div class="movement-item ${m.type}">
+    <div class="movement-item ${m.type === 'in' ? 'in' : 'out'}">
       <div class="m-icon">${m.type === 'in' ? '📥' : '📤'}</div>
-      <div class="m-info"><h4>${m.productName}</h4><span>${m.date}${m.note ? ' • ' + m.note : ''}</span></div>
+      <div class="m-info"><h4>${escapeHTML(m.productName)}</h4><span>${escapeHTML(m.date)}${m.note ? ' • ' + escapeHTML(m.note) : ''}</span></div>
       <div class="m-qty">${m.type === 'in' ? '+' : '-'}${m.quantity}</div>
     </div>
   `).join('');
@@ -1494,7 +1494,7 @@ function renderExpenses() {
   list.innerHTML = [...expenses].reverse().map(e => `
     <div class="movement-item expense">
       <div class="m-icon">💸</div>
-      <div class="m-info"><h4>${e.description}</h4><span>${e.date}</span></div>
+      <div class="m-info"><h4>${escapeHTML(e.description)}</h4><span>${escapeHTML(e.date)}</span></div>
       <div class="m-qty">-${Number(e.amount).toFixed(2)}</div>
       <button class="menu-btn" onclick="deleteExpense(${e.id})" style="color:var(--err);">🗑️</button>
     </div>
@@ -1519,7 +1519,7 @@ function renderSellGrid() {
     const emoji = p.category ? '📁' : '📦';
     return `<div class="sell-prod-card ${out ? 'low-stock' : ''}" onclick="${out ? '' : `addToCart(${p.id})`}">
       <div class="p-emoji">${emoji}</div>
-      <div class="p-name">${p.name}</div>
+      <div class="p-name">${escapeHTML(p.name)}</div>
       <div class="p-price">${p.price || 0} ${c}</div>
       <div class="p-stock">${p.quantity} ${t('pieces')}</div>
     </div>`;
@@ -1720,7 +1720,7 @@ function renderInvoiceItems() {
     <div class="cart-item">
       <button class="ci-del" onclick="removeInvoiceItem(${i})">🗑️</button>
       <div class="ci-info">
-        <div class="ci-name">${item.name}</div>
+        <div class="ci-name">${escapeHTML(item.name)}</div>
         <div class="ci-price">${item.price} ${c}</div>
       </div>
       <div class="ci-qty">
@@ -1822,21 +1822,21 @@ function printInvoice(invoice) {
   const el = document.getElementById('printInvoice');
   const c = t('currency');
   const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
-  const itemsRows = invoice.items.map(i => `<tr><td>${i.name}</td><td>${i.price.toFixed(2)} ${c}</td><td>${i.qty}</td><td>${(i.price * i.qty).toFixed(2)} ${c}</td></tr>`).join('');
+  const itemsRows = invoice.items.map(i => `<tr><td>${escapeHTML(i.name)}</td><td>${i.price.toFixed(2)} ${c}</td><td>${i.qty}</td><td>${(i.price * i.qty).toFixed(2)} ${c}</td></tr>`).join('');
   const taxRow = invoice.taxAmount > 0 ? `<div class="row"><span>${t('tax')} (${invoice.taxRate}%)</span><span>${invoice.taxAmount.toFixed(2)} ${c}</span></div>` : '';
   const discountRow = invoice.discount > 0 ? `<div class="row"><span>${t('discount')}</span><span>-${invoice.discount.toFixed(2)} ${c}</span></div>` : '';
   el.innerHTML = `<div dir="${dir}" class="inv-a4">
     <div class="inv-header">
-      <div class="company"><h1>📦 ${company.name || 'MonStock Pro'}</h1>
-        ${company.phone ? `<p>📞 ${company.phone}</p>` : ''}
-        ${company.address ? `<p>📍 ${company.address}</p>` : ''}
+      <div class="company"><h1>📦 ${escapeHTML(company.name || 'MonStock Pro')}</h1>
+        ${company.phone ? `<p>📞 ${escapeHTML(company.phone)}</p>` : ''}
+        ${company.address ? `<p>📍 ${escapeHTML(company.address)}</p>` : ''}
       </div>
       <div class="meta"><h2>${lang==='ar'?'فاتورة':'Facture'}</h2>
-        <p><b>${lang==='ar'?'الرقم':'N°'}:</b> ${invoice.number}</p>
-        <p><b>${lang==='ar'?'التاريخ':'Date'}:</b> ${invoice.date}</p>
+        <p><b>${lang==='ar'?'الرقم':'N°'}:</b> ${escapeHTML(invoice.number)}</p>
+        <p><b>${lang==='ar'?'التاريخ':'Date'}:</b> ${escapeHTML(invoice.date)}</p>
       </div>
     </div>
-    <div class="inv-client"><b>${lang==='ar'?'العميل':'Client'}:</b> ${invoice.client}${invoice.phone ? ' — 📞 ' + invoice.phone : ''}</div>
+    <div class="inv-client"><b>${lang==='ar'?'العميل':'Client'}:</b> ${escapeHTML(invoice.client)}${invoice.phone ? ' — 📞 ' + escapeHTML(invoice.phone) : ''}</div>
     <table class="inv-table"><thead><tr><th>${lang==='ar'?'المنتج':'Produit'}</th><th>${lang==='ar'?'السعر':'Prix'}</th><th>${lang==='ar'?'الكمية':'Qté'}</th><th>${lang==='ar'?'المجموع':'Total'}</th></tr></thead><tbody>${itemsRows}</tbody></table>
     <div class="inv-totals">
       <div class="row"><span>${t('subtotal')}</span><span>${invoice.subtotal.toFixed(2)} ${c}</span></div>
@@ -1854,15 +1854,15 @@ function printThermalInvoice(invoice, width) {
   const dir = invoice.lang === 'ar' ? 'rtl' : 'ltr';
   const fs = width === 58 ? '10px' : '12px';
   const tfs = width === 58 ? '14px' : '16px';
-  const itemsRows = invoice.items.map(i => `<div style="display:flex;justify-content:space-between;font-size:${fs};margin:3px 0;"><span style="flex:1;">${i.name}</span><span style="margin:0 4px;">x${i.qty}</span><span>${(i.price * i.qty).toFixed(2)}</span></div>`).join('');
+  const itemsRows = invoice.items.map(i => `<div style="display:flex;justify-content:space-between;font-size:${fs};margin:3px 0;"><span style="flex:1;">${escapeHTML(i.name)}</span><span style="margin:0 4px;">x${i.qty}</span><span>${(i.price * i.qty).toFixed(2)}</span></div>`).join('');
   el.innerHTML = `<style>@page{size:${width}mm auto;margin:0;}</style>
     <div dir="${dir}" style="font-family:'Courier New',monospace;padding:4mm 3mm;color:#000;width:${width}mm;box-sizing:border-box;">
-      <div style="text-align:center;font-weight:700;font-size:${tfs};margin-bottom:4px;">${company.name || 'MonStock Pro'}</div>
-      ${company.phone ? `<div style="text-align:center;font-size:${fs};">📞 ${company.phone}</div>` : ''}
+      <div style="text-align:center;font-weight:700;font-size:${tfs};margin-bottom:4px;">${escapeHTML(company.name || 'MonStock Pro')}</div>
+      ${company.phone ? `<div style="text-align:center;font-size:${fs};">📞 ${escapeHTML(company.phone)}</div>` : ''}
       <div style="text-align:center;font-size:${fs};margin:6px 0;">-------- ${lang==='ar'?'فاتورة':'Facture'} --------</div>
       <div style="font-size:${fs};">${lang==='ar'?'الرقم':'N°'}: ${invoice.number}</div>
       <div style="font-size:${fs};">${lang==='ar'?'التاريخ':'Date'}: ${invoice.date}</div>
-      <div style="font-size:${fs};">${lang==='ar'?'العميل':'Client'}: ${invoice.client}</div>
+      <div style="font-size:${fs};">${lang==='ar'?'العميل':'Client'}: ${escapeHTML(invoice.client)}</div>
       <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
       ${itemsRows}
       <div style="text-align:center;font-size:${fs};margin:6px 0;">------------------------</div>
@@ -1881,7 +1881,7 @@ function renderInvoices() {
   list.innerHTML = [...invoices].reverse().slice(0, 30).map(inv => `
     <div class="movement-item invoice" style="flex-wrap:wrap;">
       <div class="m-icon">🧾</div>
-      <div class="m-info"><h4>${inv.number}</h4><span>${inv.client} • ${inv.date}</span></div>
+      <div class="m-info"><h4>${escapeHTML(inv.number)}</h4><span>${escapeHTML(inv.client)} • ${escapeHTML(inv.date)}</span></div>
       <div class="m-qty">${Number(inv.total).toFixed(2)} ${c}</div>
       <div style="display:flex; gap:6px; width:100%; margin-top:8px; flex-wrap:wrap;">
         <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'a4')">🖨️ A4</button>
@@ -2027,7 +2027,7 @@ function generateReport() {
   const topHtml = top.length > 0 ? top.map((p, i) => `
     <div class="top-product">
       <div class="rank ${rankClass[i] || ''}">${i + 1}</div>
-      <div class="tp-info"><h5>${p.name}</h5><span>${p.qty} ${t('units')} • ${t('profitLbl')} ${p.profit.toFixed(2)}</span></div>
+      <div class="tp-info"><h5>${escapeHTML(p.name)}</h5><span>${p.qty} ${t('units')} • ${t('profitLbl')} ${p.profit.toFixed(2)}</span></div>
       <div class="tp-val">${p.total.toFixed(2)} ${c}</div>
     </div>
   `).join('') : `<div class="empty-state" style="padding:20px;"><p style="font-size:13px;">—</p></div>`;
@@ -2133,7 +2133,7 @@ function onScanSuccess(code) {
     document.getElementById('bcValue').value = p.barcode;
     generateBarcode();
   } else {
-    res.innerHTML = `<p style="color:var(--err);font-weight:600;text-align:center;">❌ ${code}</p>`;
+    res.innerHTML = `<p style="color:var(--err);font-weight:600;text-align:center;">❌ ${escapeHTML(code)}</p>`;
   }
 }
 function quickScan(mode='barcode') {
@@ -2181,7 +2181,7 @@ function renderLabelsProductList() {
     const qty = labelQuantities[p.id] || 0;
     return `<div class="label-item-row" style="${qty > 0 ? 'background:var(--pl);' : ''}">
       <div class="li-info">
-        <div class="li-name">${p.name}</div>
+        <div class="li-name">${escapeHTML(p.name)}</div>
         <div class="li-meta">💰 ${p.price || 0} ${c}</div>
       </div>
       <input type="number" min="0" max="200" value="${qty}" oninput="setLabelQty(${p.id}, this.value)">
@@ -2283,6 +2283,12 @@ function clearAll() {
 }
 
 /* ==================== UTILS ==================== */
+function escapeHTML(value) {
+  return String(value ?? '').replace(/[&<>"']/g, function (char) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char];
+  });
+}
+function showToast(msg, type = '') {
 function showToast(msg, type = '') {
   const toast = document.getElementById('toast');
   toast.textContent = msg;
