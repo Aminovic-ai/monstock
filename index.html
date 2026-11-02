@@ -1370,8 +1370,10 @@ async function verifySellerPin(pin, savedValue) {
     localStorage.setItem(SELLER_PIN_KEY, JSON.stringify(await hashSellerPin(pin)));
     return true;
   }
-  if (!Number.isInteger(saved.iterations) || saved.iterations < 100000 || typeof saved.salt !== 'string' || typeof saved.hash !== 'string') return false;
+  if (!Number.isInteger(saved.iterations) || saved.iterations < 100000 || saved.iterations > 1000000 ||
+      typeof saved.salt !== 'string' || typeof saved.hash !== 'string') return false;
   const salt = base64ToBytes(saved.salt);
+  if (salt.length !== 16) return false;
   const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
   const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: saved.iterations, hash: 'SHA-256' }, material, 256);
   const actual = new Uint8Array(bits), expected = base64ToBytes(saved.hash);
