@@ -1869,7 +1869,7 @@ function renderInvoices() {
         <button class="btn btn-primary" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'a4')">🖨️ A4</button>
         <button class="btn btn-warning" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal58')">🧾 58</button>
         <button class="btn btn-info" style="padding:8px; font-size:11px; flex:1;" onclick="reprintInvoice(${inv.id},'thermal80')">🧾 80</button>
-        <button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${inv.id})">🗑️</button>
+        ${isSeller ? '' : `<button class="btn btn-danger" style="padding:8px; font-size:11px; max-width:45px;" onclick="deleteInvoice(${inv.id})" title="${lang === 'ar' ? 'إلغاء الفاتورة' : 'Annuler la facture'}">🗑️</button>`}
       </div>
     </div>
   `).join('');
@@ -1881,6 +1881,7 @@ function reprintInvoice(id, mode = 'a4') {
   else printInvoice(inv);
 }
 function deleteInvoice(id) {
+  if (isSeller) return showToast(lang === 'ar' ? 'غير مسموح للبائع' : 'Action réservée au propriétaire', 'error');
   const invoice = invoices.find(x => x.id === id);
   if (!invoice) return;
   const promptText = lang === 'ar'
