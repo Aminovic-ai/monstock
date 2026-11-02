@@ -877,6 +877,7 @@ let company = { name: 'MonStock Pro', phone: '', address: '' };
 let currentInvoiceItems = [];
 let html5QrCode = null, isScanning = false, scanMode = 'barcode', miniScanner = null;
 let currentUser = null;
+let storageScope = localStorage.getItem('monstock_last_owner_uid') || 'legacy';
 let labelQuantities = {};
 let syncTimer = null;
 let fbReady = false;
@@ -1079,10 +1080,13 @@ function startAuthListener() {
     if (isSeller) return;
     if (user) {
       currentUser = { uid: user.uid, email: user.email };
+      storageScope = user.uid;
+      localStorage.setItem('monstock_last_owner_uid', user.uid);
       showApp();
       await loadFromCloud();
     } else {
       currentUser = null;
+      storageScope = localStorage.getItem('monstock_last_owner_uid') || 'legacy';
       loadLocal();
       refreshAll();
       showAuthScreen();
@@ -1090,6 +1094,18 @@ function startAuthListener() {
   });
 }
 
+function localDataKey(name, scope = storageScope) {
+  return scope === 'legacy' ? 'monstock_' + name : 'monstock_user_' + scope + '_' + name;
+}
+function hasLocalData(scope = storageScope) {
+  try {
+    return ['products','expenses','movements','invoices'].some(name => {
+      const raw = localStorage.getItem(localDataKey(name, scope));
+      const value = raw ? JSON.parse(raw) : [];
+      return Array.isArray(value) && value.length > 0;
+    });
+  } catch (e) { return false; }
+}
 async function loadFromCloud() {
   if (!currentUser || !window.FB) { loadLocal(); refreshAll(); loadCompany(); return; }
   try {
@@ -1098,15 +1114,34 @@ async function loadFromCloud() {
     const snap = await window.FB.getDoc(userRef);
     if (snap.exists()) {
       const data = snap.data();
-      products = data.products || [];
-      expenses = data.expenses || [];
-      movements = data.movements || [];
-      invoices = data.invoices || [];
+      products = Array.isArray(data.products) ? data.products : [];
+      expenses = Array.isArray(data.expenses) ? data.expenses : [];
+      movements = Array.isArray(data.movements) ? data.movements : [];
+      invoices = Array.isArray(data.invoices) ? data.invoices : [];
       company = data.company || { name: 'MonStock Pro', phone: '', address: '' };
       saveLocal();
     } else {
-      loadLocal();
-      if (products.length > 0 || expenses.length > 0) await cloudSave();
+      // A new account must never silently inherit another account's browser data.
+      if (hasLocalData(storageScope)) {
+        loadLocal(storageScope);
+        await cloudSave();
+      } else if (hasLocalData('legacy')) {
+        const importLegacy = confirm(lang === 'ar'
+          ? 'وجدنا بيانات قديمة محفوظة على هذا الجهاز. هل تريد استيرادها إلى هذا الحساب؟ اختر إلغاء لتركها محفوظة دون نقلها.'
+          : 'Des anciennes données locales ont été trouvées. Voulez-vous les importer dans ce compte ? Annulez pour les conserver sans les transférer.');
+        if (importLegacy) {
+          loadLocal('legacy');
+          await cloudSave();
+        } else {
+          products = []; expenses = []; movements = []; invoices = [];
+          company = { name: 'MonStock Pro', phone: '', address: '' };
+          saveLocal();
+        }
+      } else {
+        products = []; expenses = []; movements = []; invoices = [];
+        company = { name: 'MonStock Pro', phone: '', address: '' };
+        saveLocal();
+      }
     }
     setCloudStatus('synced');
     refreshAll(); loadCompany(); checkLowStockNotify();
@@ -1116,9 +1151,10 @@ async function loadFromCloud() {
     generateReport();
   } catch (e) {
     setCloudStatus('offline');
-    loadLocal(); refreshAll(); loadCompany();
+    loadLocal(storageScope); refreshAll(); loadCompany();
   }
 }
+
 
 async function cloudSave() {
   if (!currentUser || !window.FB || isSeller) return;
@@ -1157,22 +1193,27 @@ window.addEventListener('offline', () => setCloudStatus('offline'));
 /* ==================== LOCAL STORAGE ==================== */
 function saveLocal() {
   try {
-    localStorage.setItem('monstock_products', JSON.stringify(products));
-    localStorage.setItem('monstock_expenses', JSON.stringify(expenses));
-    localStorage.setItem('monstock_movements', JSON.stringify(movements));
-    localStorage.setItem('monstock_invoices', JSON.stringify(invoices));
-    localStorage.setItem('monstock_company', JSON.stringify(company));
+    localStorage.setItem(localDataKey('products'), JSON.stringify(products));
+    localStorage.setItem(localDataKey('expenses'), JSON.stringify(expenses));
+    localStorage.setItem(localDataKey('movements'), JSON.stringify(movements));
+    localStorage.setItem(localDataKey('invoices'), JSON.stringify(invoices));
+    localStorage.setItem(localDataKey('company'), JSON.stringify(company));
   } catch (e) {}
 }
-function loadLocal() {
+function loadLocal(scope = storageScope) {
   try {
-    products = JSON.parse(localStorage.getItem('monstock_products') || '[]');
-    expenses = JSON.parse(localStorage.getItem('monstock_expenses') || '[]');
-    movements = JSON.parse(localStorage.getItem('monstock_movements') || '[]');
-    invoices = JSON.parse(localStorage.getItem('monstock_invoices') || '[]');
-    company = JSON.parse(localStorage.getItem('monstock_company') || 'null') || { name: 'MonStock Pro', phone: '', address: '' };
-  } catch (e) {}
+    const read = name => localStorage.getItem(localDataKey(name, scope));
+    products = JSON.parse(read('products') || '[]');
+    expenses = JSON.parse(read('expenses') || '[]');
+    movements = JSON.parse(read('movements') || '[]');
+    invoices = JSON.parse(read('invoices') || '[]');
+    company = JSON.parse(read('company') || 'null') || { name: 'MonStock Pro', phone: '', address: '' };
+  } catch (e) {
+    products = []; expenses = []; movements = []; invoices = [];
+    company = { name: 'MonStock Pro', phone: '', address: '' };
+  }
 }
+
 function save() { saveLocal(); scheduleSync(); }
   /* ==================== AUTH ==================== */
 function showAuthScreen() {
@@ -1273,7 +1314,7 @@ async function doLogout() {
   try {
     if (currentUser) await cloudSave();
     if (window.FB) await window.FB.signOut(window.FB.auth);
-    ['monstock_products','monstock_expenses','monstock_movements','monstock_invoices','monstock_company'].forEach(k => localStorage.removeItem(k));
+    // Keep the per-account local cache for offline use and the seller on this device.
     products = []; expenses = []; movements = []; invoices = [];
     showToast('✅');
   } catch (e) {}
@@ -1343,6 +1384,7 @@ async function doSellerLogin() {
   } catch (e) {
     return showSellerError('يتطلب تسجيل دخول البائع اتصالاً آمناً HTTPS. حدّث الصفحة وحاول مجدداً');
   }
+  storageScope = localStorage.getItem('monstock_last_owner_uid') || 'legacy';
   isSeller = true;
   showSellerApp();
 }
