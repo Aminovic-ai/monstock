@@ -1099,11 +1099,16 @@ function localDataKey(name, scope = storageScope) {
 }
 function hasLocalData(scope = storageScope) {
   try {
-    return ['products','expenses','movements','invoices'].some(name => {
+    const hasRecords = ['products','expenses','movements','invoices'].some(name => {
       const raw = localStorage.getItem(localDataKey(name, scope));
       const value = raw ? JSON.parse(raw) : [];
       return Array.isArray(value) && value.length > 0;
     });
+    const companyRaw = localStorage.getItem(localDataKey('company', scope));
+    const savedCompany = companyRaw ? JSON.parse(companyRaw) : null;
+    const hasCompanyDetails = !!savedCompany &&
+      ((savedCompany.name && savedCompany.name !== 'MonStock Pro') || savedCompany.phone || savedCompany.address);
+    return hasRecords || !!hasCompanyDetails;
   } catch (e) { return false; }
 }
 async function loadFromCloud() {
@@ -1131,6 +1136,7 @@ async function loadFromCloud() {
           : 'Des anciennes données locales ont été trouvées. Voulez-vous les importer dans ce compte ? Annulez pour les conserver sans les transférer.');
         if (importLegacy) {
           loadLocal('legacy');
+          saveLocal(); // Keep a per-account offline copy before attempting cloud upload.
           await cloudSave();
         } else {
           products = []; expenses = []; movements = []; invoices = [];
