@@ -1389,7 +1389,7 @@ function renderTodayStats() {
   const totalToday = todayInvs.reduce((s, i) => s + Number(i.total || 0), 0);
   const profitToday = todayInvs.reduce((s, i) => s + (i.items||[]).reduce((sum, it) => {
     const p = products.find(x => x.id === it.productId);
-    const cost = p ? Number(p.cost || 0) : 0;
+    const cost = Number.isFinite(Number(it.cost)) ? Number(it.cost) : (p ? Number(p.cost || 0) : 0);
     return sum + ((Number(it.price) - cost) * Number(it.qty));
   }, 0), 0);
   const avg = todayInvs.length > 0 ? totalToday / todayInvs.length : 0;
@@ -1753,9 +1753,19 @@ function saveAndPrintInvoice(mode = 'a4') {
   const client = document.getElementById('invClient').value.trim() || '-';
   const phone = document.getElementById('invPhone').value.trim();
   const sums = renderInvoiceSummary();
+  if (!Number.isFinite(sums.total) || sums.total < 0) {
+    return showToast(lang === 'ar' ? 'الخصم أكبر من قيمة الفاتورة' : 'La remise dépasse le total', 'error');
+  }
+  if (!Number.isFinite(sums.taxRate) || sums.taxRate < 0 || sums.taxRate > 100 ||
+      !Number.isFinite(sums.discount) || sums.discount < 0) {
+    return showToast(lang === 'ar' ? 'تحقق من الضريبة والخصم' : 'Vérifiez la taxe et la remise', 'error');
+  }
   for (const item of currentInvoiceItems) {
     const p = products.find(x => x.id === item.productId);
-    if (p && item.qty > p.quantity) return showToast('❌ ' + p.name, 'error');
+    if (!p) return showToast(lang === 'ar' ? 'أحد المنتجات لم يعد موجوداً' : 'Un produit n’existe plus', 'error');
+    if (!Number.isInteger(Number(item.qty)) || item.qty <= 0 || item.qty > Number(p.quantity || 0)) {
+      return showToast('❌ ' + p.name + ' — ' + (lang === 'ar' ? 'الكمية غير متاحة' : 'Stock insuffisant'), 'error');
+    }
   }
   const invoice = {
     id: Date.now(),
@@ -1871,10 +1881,32 @@ function reprintInvoice(id, mode = 'a4') {
   else printInvoice(inv);
 }
 function deleteInvoice(id) {
-  if (!confirm('?')) return;
+  const invoice = invoices.find(x => x.id === id);
+  if (!invoice) return;
+  const promptText = lang === 'ar'
+    ? 'هل تريد إلغاء هذه الفاتورة؟ ستُعاد المنتجات إلى المخزون.'
+    : 'Annuler cette facture ? Les produits seront remis en stock.';
+  if (!confirm(promptText)) return;
+
+  (invoice.items || []).forEach(item => {
+    const product = products.find(p => p.id === item.productId);
+    const qty = Number(item.qty) || 0;
+    if (product && qty > 0) {
+      product.quantity = Number(product.quantity || 0) + qty;
+      movements.push({
+        date: new Date().toLocaleString(),
+        productName: product.name,
+        type: 'in',
+        quantity: qty,
+        note: (lang === 'ar' ? 'إلغاء فاتورة ' : 'Annulation facture ') + invoice.number
+      });
+    }
+  });
+
   invoices = invoices.filter(x => x.id !== id);
-  save(); renderInvoices(); renderStats(); renderTodayStats();
-  showToast('🗑️', 'success');
+  save();
+  refreshAll();
+  showToast(lang === 'ar' ? 'تم إلغاء الفاتورة وإرجاع المخزون' : 'Facture annulée, stock restauré', 'success');
 }
 
 /* ==================== REPORTS ==================== */
@@ -1917,10 +1949,11 @@ function generateReport() {
   const totalExp = periodExpenses.reduce((s, e) => s + Number(e.amount || 0), 0);
   const totalCost = periodInvoices.reduce((s, inv) => s + (inv.items || []).reduce((sum, item) => {
     const p = products.find(x => x.id === item.productId);
-    return sum + ((p ? Number(p.cost || 0) : 0) * Number(item.qty));
+    const unitCost = Number.isFinite(Number(item.cost)) ? Number(item.cost) : (p ? Number(p.cost || 0) : 0);
+    return sum + (unitCost * Number(item.qty || 0));
   }, 0), 0);
   const grossProfit = totalSales - totalCost;
-  const netProfit = totalSales - totalExp;
+  const netProfit = grossProfit - totalExp;
   const margin = totalSales > 0 ? (netProfit / totalSales * 100) : 0;
   const avg = periodInvoices.length > 0 ? totalSales / periodInvoices.length : 0;
 
@@ -1936,7 +1969,8 @@ function generateReport() {
       dailyData[key].sales += Number(inv.total || 0);
       const cost = (inv.items||[]).reduce((sum, item) => {
         const p = products.find(x => x.id === item.productId);
-        return sum + ((p ? Number(p.cost || 0) : 0) * Number(item.qty));
+        const unitCost = Number.isFinite(Number(item.cost)) ? Number(item.cost) : (p ? Number(p.cost || 0) : 0);
+        return sum + (unitCost * Number(item.qty || 0));
       }, 0);
       dailyData[key].profit += (Number(inv.total || 0) - cost);
     }
@@ -1963,8 +1997,8 @@ function generateReport() {
     (inv.items || []).forEach(item => {
       if (!productSales[item.productId]) productSales[item.productId] = { name: item.name, qty: 0, total: 0, profit: 0 };
       const p = products.find(x => x.id === item.productId);
-      const cost = p ? Number(p.cost || 0) : 0;
-      productSales[item.productId].qty += item.qty;
+      const cost = Number.isFinite(Number(item.cost)) ? Number(item.cost) : (p ? Number(p.cost || 0) : 0);
+      productSales[item.productId].qty += Number(item.qty || 0);
       productSales[item.productId].total += item.price * item.qty;
       productSales[item.productId].profit += (item.price - cost) * item.qty;
     });
