@@ -1304,26 +1304,46 @@ function switchToOwner() {
 function showSellerError(msg) {
   const el = document.getElementById('sellerError'); el.textContent = msg; el.classList.add('show');
 }
+const SELLER_PIN_KEY = 'monstock_seller_pin';
+const SELLER_PIN_ITERATIONS = 250000;
+function bytesToBase64(bytes) { return btoa(String.fromCharCode(...new Uint8Array(bytes))); }
+function base64ToBytes(value) { return Uint8Array.from(atob(value), ch => ch.charCodeAt(0)); }
+async function hashSellerPin(pin, saltBytes) {
+  if (!window.crypto?.subtle || !window.isSecureContext) throw new Error('SECURE_CRYPTO_UNAVAILABLE');
+  const salt = saltBytes || crypto.getRandomValues(new Uint8Array(16));
+  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: SELLER_PIN_ITERATIONS, hash: 'SHA-256' }, material, 256);
+  return { version: 1, algorithm: 'PBKDF2-SHA256', iterations: SELLER_PIN_ITERATIONS, salt: bytesToBase64(salt), hash: bytesToBase64(bits) };
+}
+async function verifySellerPin(pin, savedValue) {
+  if (!savedValue) return false;
+  let saved; try { saved = JSON.parse(savedValue); } catch { saved = null; }
+  if (!saved || saved.algorithm !== 'PBKDF2-SHA256' || saved.version !== 1) {
+    if (savedValue !== pin) return false;
+    localStorage.setItem(SELLER_PIN_KEY, JSON.stringify(await hashSellerPin(pin)));
+    return true;
+  }
+  if (!Number.isInteger(saved.iterations) || saved.iterations < 100000 || typeof saved.salt !== 'string' || typeof saved.hash !== 'string') return false;
+  const salt = base64ToBytes(saved.salt);
+  const material = await crypto.subtle.importKey('raw', new TextEncoder().encode(pin), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: saved.iterations, hash: 'SHA-256' }, material, 256);
+  const actual = new Uint8Array(bits), expected = base64ToBytes(saved.hash);
+  if (actual.length !== expected.length) return false;
+  let diff = 0; for (let i = 0; i < actual.length; i++) diff |= actual[i] ^ expected[i];
+  return diff === 0;
+}
 async function doSellerLogin() {
   document.getElementById('sellerError').classList.remove('show');
   const pin = document.getElementById('sellerPin').value.trim();
-  if (!pin) return showSellerError('أدخل الرقم السري');
-  if (pin.length < 4) return showSellerError('الرقم السري 4 أرقام على الأقل');
-  let correctPin = localStorage.getItem('monstock_seller_pin') || '';
-  if (!correctPin && window.FB && fbReady) {
-    try {
-      const ref = window.FB.doc(window.FB.db, 'config', 'seller_pin');
-      const snap = await window.FB.getDoc(ref);
-      if (snap.exists()) {
-        correctPin = snap.data().pin || '';
-        if (correctPin) localStorage.setItem('monstock_seller_pin', correctPin);
-      }
-    } catch (e) {}
+  if (!/^\d{4,8}$/.test(pin)) return showSellerError('أدخل رمزاً رقمياً من 4 إلى 8 أرقام');
+  const savedPin = localStorage.getItem(SELLER_PIN_KEY) || '';
+  if (!savedPin) return showSellerError('لم يُضبط رمز البائع على هذا الجهاز. اتصل بالمالك');
+  try {
+    if (!await verifySellerPin(pin, savedPin)) return showSellerError('الرقم السري غير صحيح');
+  } catch (e) {
+    return showSellerError('يتطلب تسجيل دخول البائع اتصالاً آمناً HTTPS. حدّث الصفحة وحاول مجدداً');
   }
-  if (!correctPin) return showSellerError('لم يُضبط الرقم السري. اتصل بالمالك');
-  if (pin !== correctPin) return showSellerError('الرقم السري غير صحيح');
   isSeller = true;
-  localStorage.setItem('monstock_is_seller', '1');
   showSellerApp();
 }
 function showSellerApp() {
@@ -1340,30 +1360,28 @@ function showSellerApp() {
   loadLocal(); translateAll(); refreshAll(); goTo('page-invoice');
 }
 function sellerLogout() {
-  if (!confirm('تسجيل خروج البائع؟')) return;
+  if (!confirm(lang === 'ar' ? 'تسجيل خروج البائع؟' : 'Déconnecter le vendeur ?')) return;
   isSeller = false;
-  localStorage.removeItem('monstock_is_seller');
   document.body.classList.remove('seller-mode');
   location.reload();
 }
 async function saveSellerPin() {
-  const pin = document.getElementById('sSellerPin').value.trim();
-  if (!pin || pin.length < 4) return showToast('4 أرقام على الأقل', 'error');
-  if (pin.length > 8) return showToast('8 أرقام كحد أقصى', 'error');
-  localStorage.setItem('monstock_seller_pin', pin);
-  if (window.FB && currentUser && fbReady) {
-    try {
-      const ref = window.FB.doc(window.FB.db, 'config', 'seller_pin');
-      await window.FB.setDoc(ref, { pin, owner: currentUser.email, updated: new Date().toISOString() }, { merge: true });
-      showToast('✅', 'success');
-    } catch (e) { showToast('✅ Local', 'success'); }
-  } else { showToast('✅ Local', 'success'); }
+  const input = document.getElementById('sSellerPin');
+  const pin = input.value.trim();
+  if (!/^\d{6,8}$/.test(pin)) return showToast(lang === 'ar' ? 'اختر رمزاً رقمياً من 6 إلى 8 أرقام' : 'Choisissez un code de 6 à 8 chiffres', 'error');
+  try {
+    localStorage.setItem(SELLER_PIN_KEY, JSON.stringify(await hashSellerPin(pin)));
+    input.value = '';
+    showToast(lang === 'ar' ? 'تم حفظ الرمز على هذا الجهاز فقط' : 'Code enregistré sur cet appareil uniquement', 'success');
+  } catch (e) {
+    showToast(lang === 'ar' ? 'تعذر الحفظ: افتح التطبيق عبر HTTPS' : 'Enregistrement impossible : utilisez HTTPS', 'error');
+  }
 }
 function loadSellerPinToSettings() {
-  const pin = localStorage.getItem('monstock_seller_pin') || '';
-  const el = document.getElementById('sSellerPin'); if (el) el.value = pin;
-  }
-  /* ==================== REFRESH ALL ==================== */
+  const el = document.getElementById('sSellerPin');
+  if (el) el.value = '';
+}
+/* ==================== REFRESH ALL ==================== */
 function refreshAll() {
   renderProducts(); renderMovements(); renderExpenses(); renderStats();
   updateProductSelects(); updateCategoryList(); updateBarcodeSelect();
@@ -2319,13 +2337,8 @@ const defRange = getDefaultRange();
 const rf = document.getElementById('reportFrom'); if (rf) rf.value = defRange.from;
 const rt = document.getElementById('reportTo'); if (rt) rt.value = defRange.to;
 
-if (localStorage.getItem('monstock_is_seller') === '1') {
-  isSeller = true;
-  showSellerApp();
-} else {
-  showAuthScreen();
-}
-
+// Seller sessions are not persisted; each fresh session requires the PIN.
+showAuthScreen();
 setTimeout(() => {
   if (!fbReady && !isSeller) {
     showAuthError('loginError', '⚠️ Connexion... Vérifiez Internet');
